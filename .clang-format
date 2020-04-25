@@ -1,0 +1,7 @@
+BasedOnStyle: Microsoft
+IndentWidth: 4
+DerivePointerAlignment: false
+PointerAlignment: Left
+BraceWrapping:
+  AfterNamespace: false
+  AfterControlStatement: false
