@@ -27,9 +27,9 @@ void mermaid::Application::update(mermaid::Context& ctx)
     rootComponent->update(ctx);
 }
 
-void mermaid::Application::setRootComponent(std::unique_ptr<mermaid::components::Component>&& root)
+void mermaid::Application::setRootComponent(std::shared_ptr<mermaid::components::Component> root)
 {
-    rootComponent.reset(std::move(root).release());
+    rootComponent.reset(root.get());
 }
 
 bool mermaid::Application::processEvents()
@@ -46,7 +46,7 @@ bool mermaid::Application::processEvents()
 
 void mermaid::Application::draw(mermaid::Context& ctx)
 {
-    if (rootComponent.get() == nullptr) {
+    if (rootComponent.get() == nullptr || !rootComponent->isVisible()) {
         return;
     }
     rootComponent->draw(ctx);

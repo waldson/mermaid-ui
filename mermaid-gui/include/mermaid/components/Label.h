@@ -14,7 +14,7 @@ class Label : public Widget
 {
 
   public:
-    static std::unique_ptr<mermaid::components::Label> create(std::u8string text, mermaid::Font& font);
+    static std::shared_ptr<mermaid::components::Label> create(std::u8string text, mermaid::Font& font);
 
     void setColor(Color color);
     void setFont(Font& font);

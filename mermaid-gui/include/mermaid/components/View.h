@@ -15,9 +15,9 @@ class View : public Widget
 {
 
   public:
-    static std::unique_ptr<mermaid::components::View> create();
-    static std::unique_ptr<mermaid::components::View> create(int width, int height);
-    static std::unique_ptr<mermaid::components::View> create(int x, int y, int width, int height);
+    static std::shared_ptr<mermaid::components::View> create();
+    static std::shared_ptr<mermaid::components::View> create(int width, int height);
+    static std::shared_ptr<mermaid::components::View> create(int x, int y, int width, int height);
 
     void setBackground(Color color);
     void setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
@@ -30,7 +30,7 @@ class View : public Widget
   private:
     View(int x, int y, int width, int height);
     mermaid::Color backgroundColor;
-    std::vector<std::unique_ptr<mermaid::components::Component>> components;
+    std::vector<std::shared_ptr<mermaid::components::Component>> components;
 };
 } // namespace mermaid::components
 #endif

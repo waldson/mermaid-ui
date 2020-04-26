@@ -1,9 +1,12 @@
 #include "mermaid/components/Widget.h"
 
-#include <iostream>
-
 mermaid::components::Widget::Widget() :
     size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true)
+{
+}
+
+mermaid::components::Widget::Widget(std::shared_ptr<Widget> parent) :
+    size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true), parent(parent)
 {
 }
 
@@ -67,4 +70,43 @@ void mermaid::components::Widget::unsetOption(std::u8string key)
 mermaid::Options& mermaid::components::Widget::getOptions()
 {
     return options;
+}
+
+bool mermaid::components::Widget::isVisible()
+{
+    return visible;
+}
+
+void mermaid::components::Widget::setVisible(bool visible)
+{
+    this->visible = visible;
+}
+
+void mermaid::components::Widget::show()
+{
+    this->setVisible(true);
+}
+
+void mermaid::components::Widget::hide()
+{
+    this->setVisible(false);
+}
+
+void mermaid::components::Widget::toggleVisibility()
+{
+    this->setVisible(!visible);
+}
+
+std::optional<std::shared_ptr<mermaid::components::Widget>> mermaid::components::Widget::getParent()
+{
+    if (parent.expired()) {
+        return std::nullopt;
+    }
+
+    return parent.lock();
+}
+
+void mermaid::components::Widget::setParent(std::shared_ptr<Widget> parent)
+{
+    this->parent = parent;
 }

@@ -12,7 +12,7 @@ class Application
 {
   public:
     Application(mermaid::SdlWindow& window);
-    void setRootComponent(std::unique_ptr<mermaid::components::Component>&& root);
+    void setRootComponent(std::shared_ptr<mermaid::components::Component> root);
     void run();
 
   private:
@@ -25,7 +25,7 @@ class Application
     mermaid::SdlWindow& window;
     bool running;
     float delta;
-    std::unique_ptr<mermaid::components::Component> rootComponent;
+    std::shared_ptr<mermaid::components::Component> rootComponent;
 };
 } // namespace mermaid
 #endif

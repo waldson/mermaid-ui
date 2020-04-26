@@ -27,9 +27,9 @@ int main(int argc, char* argv[])
     auto text = Label::create(label, *font);
 
     view->setBackground(50, 60, 70);
-    text->setColor(Color(120, 200, 200));
+    text->setColor(Color(150, 200, 200));
     text->setSize(100, 100);
-    app.setRootComponent(std::move(text));
+    app.setRootComponent(text);
     /* app.setRootComponent(std::move(view)); */
     app.run();
 

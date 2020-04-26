@@ -21,11 +21,11 @@ mermaid::components::Label::~Label()
     }
 }
 
-std::unique_ptr<mermaid::components::Label> mermaid::components::Label::create(std::u8string text, mermaid::Font& font)
+std::shared_ptr<mermaid::components::Label> mermaid::components::Label::create(std::u8string text, mermaid::Font& font)
 {
     auto label = new mermaid::components::Label(text, font);
 
-    return std::unique_ptr<mermaid::components::Label>(label);
+    return std::shared_ptr<mermaid::components::Label>(label);
 }
 
 void mermaid::components::Label::update(Context& ctx)

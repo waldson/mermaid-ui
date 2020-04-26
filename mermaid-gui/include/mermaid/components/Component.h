@@ -14,6 +14,7 @@ class Component
     virtual void draw(mermaid::Context& context) = 0;
     virtual void update(mermaid::Context& context) = 0;
     virtual Rect getDrawRect() = 0;
+    virtual bool isVisible() = 0;
     virtual ~Component() = default;
 };
 } // namespace mermaid::components

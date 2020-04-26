@@ -17,24 +17,27 @@ mermaid::components::View::View(int x, int y, int width, int height) : mermaid::
     getSize().height = height;
 }
 
-std::unique_ptr<mermaid::components::View> mermaid::components::View::create(int width, int height)
+std::shared_ptr<mermaid::components::View> mermaid::components::View::create(int width, int height)
 {
     return mermaid::components::View::create(0, 0, width, height);
 }
 
-std::unique_ptr<mermaid::components::View> mermaid::components::View::create(int x, int y, int width, int height)
+std::shared_ptr<mermaid::components::View> mermaid::components::View::create(int x, int y, int width, int height)
 {
     auto view = new mermaid::components::View(x, y, width, height);
-    return std::unique_ptr<components::View>(view);
+    return std::shared_ptr<components::View>(view);
 }
 
-std::unique_ptr<mermaid::components::View> mermaid::components::View::create()
+std::shared_ptr<mermaid::components::View> mermaid::components::View::create()
 {
     return create(0, 0, 0, 0);
 }
 
 void mermaid::components::View::draw(Context& ctx)
 {
+    if (!isVisible()) {
+        return;
+    }
     SDL_SetRenderDrawColor(ctx.window->getRenderer(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
                            backgroundColor.a);
     auto rect = getDrawRect().toSdlRect();

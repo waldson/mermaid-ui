@@ -17,6 +17,9 @@ class Widget : public Component
     virtual void draw(mermaid::Context& context) = 0;
     virtual void update(mermaid::Context& context) = 0;
     virtual Rect getDrawRect() = 0;
+
+    bool isVisible() override;
+
     virtual ~Widget() = default;
 
     mermaid::Size& getSize();
@@ -31,6 +34,14 @@ class Widget : public Component
     mermaid::Margin& getMargin();
     mermaid::Border& getBorder();
     mermaid::Options& getOptions();
+
+    void setVisible(bool visible);
+    void show();
+    void hide();
+    void toggleVisibility();
+
+    void setParent(std::shared_ptr<Widget> parent);
+    std::optional<std::shared_ptr<Widget>> getParent();
 
     template <typename T>
     std::optional<T> getOption(std::u8string key)
@@ -50,6 +61,7 @@ class Widget : public Component
 
   protected:
     Widget();
+    Widget(std::shared_ptr<Widget> parent);
 
   private:
     mermaid::Size size;
@@ -59,6 +71,7 @@ class Widget : public Component
     mermaid::Border border;
     mermaid::Options options;
     bool visible;
+    std::weak_ptr<Widget> parent;
 };
 } // namespace mermaid::components
 #endif
