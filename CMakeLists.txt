@@ -41,6 +41,8 @@ ADD_LIBRARY(MermaidGui STATIC
     mermaid-gui/src/components/Widget.cpp
     mermaid-gui/src/components/Label.cpp
     mermaid-gui/src/components/View.cpp
+    mermaid-gui/src/components/HBox.cpp
+    mermaid-gui/src/components/VBox.cpp
 )
 TARGET_LINK_LIBRARIES(MermaidGui ${LIBS})
 
