@@ -110,3 +110,56 @@ void mermaid::components::Widget::setParent(std::shared_ptr<Widget> parent)
 {
     this->parent = parent;
 }
+
+void mermaid::components::Widget::addChild(std::shared_ptr<mermaid::components::Widget> child)
+{
+    children.push_back(child);
+    child->setParent(shared_from_this());
+}
+
+bool mermaid::components::Widget::removeChild(std::shared_ptr<mermaid::components::Widget> child)
+{
+    auto item = std::find(children.begin(), children.end(), child);
+    if (item == children.end()) {
+        return false;
+    }
+    children.erase(item);
+    return true;
+}
+
+bool mermaid::components::Widget::hasChild(std::shared_ptr<mermaid::components::Widget> child)
+{
+    auto item = std::find(children.begin(), children.end(), child);
+    return item != children.end();
+}
+
+void mermaid::components::Widget::clearChildren()
+{
+    children.clear();
+}
+
+std::vector<std::shared_ptr<mermaid::components::Widget>>& mermaid::components::Widget::getChildren()
+{
+    return children;
+}
+
+void mermaid::components::Widget::draw(Context& ctx)
+{
+    if (!isVisible()) {
+        return;
+    }
+
+    for (auto& child : children) {
+        if (!child->isVisible()) {
+            continue;
+        }
+        child->draw(ctx);
+    }
+}
+
+void mermaid::components::Widget::update(Context& ctx)
+{
+    for (auto& child : children) {
+        child->update(ctx);
+    }
+}

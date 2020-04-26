@@ -29,7 +29,9 @@ int main(int argc, char* argv[])
     view->setBackground(50, 60, 70);
     text->setColor(Color(150, 200, 200));
     text->setSize(100, 100);
-    app.setRootComponent(text);
+    text->setPosition(30, 33);
+    view->addChild(text);
+    app.setRootComponent(view);
     /* app.setRootComponent(std::move(view)); */
     app.run();
 

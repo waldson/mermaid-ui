@@ -7,15 +7,16 @@
 
 #include <memory>
 #include <optional>
+#include <vector>
 
 namespace mermaid::components {
 
-class Widget : public Component
+class Widget : public Component, public std::enable_shared_from_this<mermaid::components::Widget>
 {
 
   public:
-    virtual void draw(mermaid::Context& context) = 0;
-    virtual void update(mermaid::Context& context) = 0;
+    virtual void draw(mermaid::Context& context);
+    virtual void update(mermaid::Context& context);
     virtual Rect getDrawRect() = 0;
 
     bool isVisible() override;
@@ -42,6 +43,11 @@ class Widget : public Component
 
     void setParent(std::shared_ptr<Widget> parent);
     std::optional<std::shared_ptr<Widget>> getParent();
+    void addChild(std::shared_ptr<mermaid::components::Widget> child);
+    bool removeChild(std::shared_ptr<mermaid::components::Widget> child);
+    bool hasChild(std::shared_ptr<mermaid::components::Widget> child);
+    void clearChildren();
+    std::vector<std::shared_ptr<mermaid::components::Widget>>& getChildren();
 
     template <typename T>
     std::optional<T> getOption(std::u8string key)
@@ -72,6 +78,7 @@ class Widget : public Component
     mermaid::Options options;
     bool visible;
     std::weak_ptr<Widget> parent;
+    std::vector<std::shared_ptr<mermaid::components::Widget>> children;
 };
 } // namespace mermaid::components
 #endif

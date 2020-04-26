@@ -46,7 +46,7 @@ void mermaid::components::Label::updateSize()
 mermaid::Rect mermaid::components::Label::getDrawRect()
 {
     rect.x = getPosition().x;
-    rect.y = getPosition().x;
+    rect.y = getPosition().y;
     if (dirty) {
         updateSize();
     }

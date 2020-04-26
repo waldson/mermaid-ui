@@ -5,11 +5,12 @@
 #include "mermaid/SdlWindow.h"
 #include "mermaid/components/Component.h"
 
+#include <algorithm>
 #include <memory>
 
 using namespace mermaid;
 
-mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget(), components()
+mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget()
 {
     getPosition().x = x;
     getPosition().y = x;
@@ -42,6 +43,7 @@ void mermaid::components::View::draw(Context& ctx)
                            backgroundColor.a);
     auto rect = getDrawRect().toSdlRect();
     SDL_RenderFillRect(ctx.window->getRenderer(), &rect);
+    mermaid::components::Widget::draw(ctx);
 }
 
 Rect mermaid::components::View::getDrawRect()
@@ -50,10 +52,6 @@ Rect mermaid::components::View::getDrawRect()
     auto size = getSize();
     Rect rect(position.x, position.y, size.width, size.height);
     return rect;
-}
-
-void mermaid::components::View::update(Context& ctx)
-{
 }
 
 void mermaid::components::View::setBackground(Color color)

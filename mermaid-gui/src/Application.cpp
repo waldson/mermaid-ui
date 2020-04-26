@@ -29,7 +29,7 @@ void mermaid::Application::update(mermaid::Context& ctx)
 
 void mermaid::Application::setRootComponent(std::shared_ptr<mermaid::components::Component> root)
 {
-    rootComponent.reset(root.get());
+    rootComponent = root;
 }
 
 bool mermaid::Application::processEvents()
