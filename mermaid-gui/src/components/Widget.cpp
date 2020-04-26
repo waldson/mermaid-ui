@@ -1,5 +1,7 @@
 #include "mermaid/components/Widget.h"
 
+#include <iostream>
+
 mermaid::components::Widget::Widget() :
     size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true)
 {
@@ -62,6 +64,21 @@ bool mermaid::components::Widget::hasOption(std::u8string key)
     return options.has(key);
 }
 
+mermaid::Rect mermaid::components::Widget::getDrawRect()
+{
+    mermaid::Rect localRect(getPosition(), getSize());
+
+    mermaid::Rect parentRect(0, 0, 0, 0);
+
+    if (hasParent()) {
+        parentRect = getParent().value()->getDrawRect();
+    }
+
+    mermaid::Rect rect(parentRect.x + localRect.x, parentRect.y + localRect.y, localRect.width, localRect.height);
+
+    return rect;
+}
+
 void mermaid::components::Widget::unsetOption(std::u8string key)
 {
     options.unset(key);
@@ -97,9 +114,14 @@ void mermaid::components::Widget::toggleVisibility()
     this->setVisible(!visible);
 }
 
+bool mermaid::components::Widget::hasParent()
+{
+    return !parent.expired();
+}
+
 std::optional<std::shared_ptr<mermaid::components::Widget>> mermaid::components::Widget::getParent()
 {
-    if (parent.expired()) {
+    if (!hasParent()) {
         return std::nullopt;
     }
 

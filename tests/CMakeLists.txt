@@ -8,6 +8,7 @@ TARGET_INCLUDE_DIRECTORIES(Catch INTERFACE include)
 ADD_EXECUTABLE(mermaid-rpg-tests 
     src/main.cpp
     src/WidgetTest.cpp
+    src/RectTest.cpp
 )
 TARGET_LINK_LIBRARIES(mermaid-rpg-tests PUBLIC Catch MermaidGui)
 

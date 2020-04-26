@@ -6,7 +6,7 @@
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
-#include <iostream>
+#include<iostream>
 
 mermaid::components::Label::Label(std::u8string text, mermaid::Font& font) :
     text(text), font(font), color(0, 0, 0), dirty(true), textureCache(nullptr)
@@ -30,8 +30,9 @@ std::shared_ptr<mermaid::components::Label> mermaid::components::Label::create(s
 
 void mermaid::components::Label::update(Context& ctx)
 {
+    mermaid::components::Widget::update(ctx);
     if (dirty) {
-        /* updateSize(); */
+        updateSize();
         updateTexture(ctx);
         dirty = false;
     }
@@ -47,11 +48,17 @@ mermaid::Rect mermaid::components::Label::getDrawRect()
 {
     rect.x = getPosition().x;
     rect.y = getPosition().y;
+
     if (dirty) {
         updateSize();
     }
 
-    return rect;
+    mermaid::Rect parentRect(0, 0, 0, 0);
+    if (hasParent()) {
+        parentRect = getParent().value()->getDrawRect();
+    }
+
+    return mermaid::Rect(parentRect.x + rect.x, parentRect.y + rect.y, rect.width, rect.height);
 }
 
 void mermaid::components::Label::draw(Context& ctx)
@@ -85,6 +92,12 @@ std::u8string mermaid::components::Label::getText()
     return text;
 }
 
+void mermaid::components::Label::setParent(std::shared_ptr<Widget> parent) 
+{
+    mermaid::components::Widget::setParent(parent);
+    dirty = true;
+}
+
 void mermaid::components::Label::updateTexture(Context& ctx)
 {
     if (textureCache) {
@@ -98,8 +111,6 @@ void mermaid::components::Label::updateTexture(Context& ctx)
         TTF_RenderUTF8_Blended(font, str.c_str(), color.toSdlColor()), SDL_FreeSurface);
 
     SDL_SetSurfaceBlendMode(&*surface, SDL_BLENDMODE_BLEND);
-    auto rect = getDrawRect().toSdlRect();
-    SDL_BlitSurface(&*surface, &rect, nullptr, nullptr);
     textureCache = SDL_CreateTextureFromSurface(ctx.window->getRenderer(), &*surface);
     dirty = false;
     /* font.asSdlPointer()->c */

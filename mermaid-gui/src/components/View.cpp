@@ -46,14 +46,6 @@ void mermaid::components::View::draw(Context& ctx)
     mermaid::components::Widget::draw(ctx);
 }
 
-Rect mermaid::components::View::getDrawRect()
-{
-    auto position = getPosition();
-    auto size = getSize();
-    Rect rect(position.x, position.y, size.width, size.height);
-    return rect;
-}
-
 void mermaid::components::View::setBackground(Color color)
 {
     backgroundColor = color;

@@ -5,6 +5,9 @@ RPG Session Manager. Programmer Style.
 
 ## Tasks
 
+- Event system
+- Image
+- TextInput
 - Add scitilla like editor (https://www.scintilla.org/index.html)
 
 ## References & Utilities

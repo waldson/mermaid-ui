@@ -17,7 +17,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
   public:
     virtual void draw(mermaid::Context& context);
     virtual void update(mermaid::Context& context);
-    virtual Rect getDrawRect() = 0;
+    virtual Rect getDrawRect();
 
     bool isVisible() override;
 
@@ -41,12 +41,15 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     void hide();
     void toggleVisibility();
 
-    void setParent(std::shared_ptr<Widget> parent);
-    std::optional<std::shared_ptr<Widget>> getParent();
-    void addChild(std::shared_ptr<mermaid::components::Widget> child);
-    bool removeChild(std::shared_ptr<mermaid::components::Widget> child);
-    bool hasChild(std::shared_ptr<mermaid::components::Widget> child);
-    void clearChildren();
+    virtual bool hasParent();
+    virtual void setParent(std::shared_ptr<Widget> parent);
+    virtual std::optional<std::shared_ptr<Widget>> getParent();
+
+    virtual void addChild(std::shared_ptr<mermaid::components::Widget> child);
+    virtual bool removeChild(std::shared_ptr<mermaid::components::Widget> child);
+    virtual bool hasChild(std::shared_ptr<mermaid::components::Widget> child);
+    virtual void clearChildren();
+
     std::vector<std::shared_ptr<mermaid::components::Widget>>& getChildren();
 
     template <typename T>

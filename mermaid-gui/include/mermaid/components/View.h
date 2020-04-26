@@ -24,7 +24,6 @@ class View : public Widget
     void setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b);
 
     void draw(Context& ctx) override;
-    Rect getDrawRect() override;
 
   private:
     View(int x, int y, int width, int height);
