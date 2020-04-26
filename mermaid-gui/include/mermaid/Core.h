@@ -59,6 +59,67 @@ struct Rect
     {
     }
 
+    Rect(mermaid::Point position, mermaid::Size size) :
+        x(position.x), y(position.y), width(size.width), height(size.height)
+    {
+    }
+
+    inline Rect operator+(const Rect& other)
+    {
+        return Rect(x + other.x, y + other.y, width + other.width, height + other.height);
+    }
+
+    inline Rect operator-(const Rect& other)
+    {
+        return Rect(x - other.x, y - other.y, width - other.width, height - other.height);
+    }
+
+    inline Rect operator*(const Rect& other)
+    {
+        return Rect(x * other.x, y * other.y, width * other.width, height * other.height);
+    }
+
+    inline Rect operator/(const Rect& other)
+    {
+        return Rect(x / other.x, y / other.y, width / other.width, height / other.height);
+    }
+
+    inline Rect& operator+=(const Rect& other)
+    {
+        x += other.x;
+        y += other.y;
+        width += other.width;
+        height += other.height;
+        return *this;
+    }
+
+    inline Rect& operator-=(const Rect& other)
+    {
+        x -= other.x;
+        y -= other.y;
+        width -= other.width;
+        height -= other.height;
+        return *this;
+    }
+
+    inline Rect& operator*=(const Rect& other)
+    {
+        x *= other.x;
+        y *= other.y;
+        width *= other.width;
+        height *= other.height;
+        return *this;
+    }
+
+    inline Rect& operator/=(const Rect& other)
+    {
+        x /= other.x;
+        y /= other.y;
+        width /= other.width;
+        height /= other.height;
+        return *this;
+    }
+
     SDL_Rect toSdlRect()
     {
         SDL_Rect rect;
