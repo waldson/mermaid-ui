@@ -16,3 +16,38 @@ TEST_CASE("Parent show be set correctly", "[Widget]")
     auto childParent = maybeChild.value();
     REQUIRE(childParent == parent);
 }
+
+TEST_CASE("Position must be set correctly", "[Widget]")
+{
+    auto view = mermaid::components::View::create();
+    view->setPosition(10, 20);
+
+    REQUIRE(view->getPosition().x == 10);
+    REQUIRE(view->getPosition().y == 20);
+}
+
+TEST_CASE("Size must be set correctly", "[Widget]")
+{
+    auto view = mermaid::components::View::create();
+    view->setSize(10, 20);
+
+    REQUIRE(view->getSize().width == 10);
+    REQUIRE(view->getSize().height == 20);
+}
+
+TEST_CASE("Visibility must be set correctly", "[Widget]")
+{
+    auto view = mermaid::components::View::create();
+
+    view->hide();
+    REQUIRE(!view->isVisible());
+
+    view->show();
+    REQUIRE(view->isVisible());
+
+    view->setVisible(false);
+    REQUIRE(!view->isVisible());
+
+    view->setVisible(true);
+    REQUIRE(view->isVisible());
+}
