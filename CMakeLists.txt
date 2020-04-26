@@ -28,7 +28,7 @@ INCLUDE_DIRECTORIES(
 
 SET(LIBS ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
-ADD_LIBRARY(mermaid-gui STATIC 
+ADD_LIBRARY(MermaidGui STATIC 
     # base
     mermaid-gui/src/SdlContext.cpp
     mermaid-gui/src/SdlWindow.cpp
@@ -42,9 +42,11 @@ ADD_LIBRARY(mermaid-gui STATIC
     mermaid-gui/src/components/Label.cpp
     mermaid-gui/src/components/View.cpp
 )
-TARGET_LINK_LIBRARIES(mermaid-gui ${LIBS})
+TARGET_LINK_LIBRARIES(MermaidGui ${LIBS})
 
 ADD_EXECUTABLE(mermaid-rpg 
     src/main.cpp
 )
-TARGET_LINK_LIBRARIES(mermaid-rpg ${LIBS} mermaid-gui)
+TARGET_LINK_LIBRARIES(mermaid-rpg ${LIBS} MermaidGui)
+ENABLE_TESTING()
+ADD_SUBDIRECTORY(tests)

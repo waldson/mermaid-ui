@@ -31,7 +31,9 @@ int main(int argc, char* argv[])
     text->setSize(100, 100);
     text->setPosition(30, 33);
     view->addChild(text);
+
     app.setRootComponent(view);
+
     /* app.setRootComponent(std::move(view)); */
     app.run();
 
