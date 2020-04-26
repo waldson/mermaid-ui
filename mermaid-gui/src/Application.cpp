@@ -1,15 +1,15 @@
 #include "mermaid/Application.h"
+
+#include "mermaid/Context.h"
 #include "mermaid/SdlWindow.h"
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <chrono>
 #include <iostream>
 #include <memory>
 
-using namespace mermaid;
-
-mermaid::Application::Application(SdlWindow& window)
-    : window(window), running(false), delta(0.0f), rootComponent(nullptr)
+mermaid::Application::Application(mermaid::SdlWindow& window) :
+    window(window), running(false), delta(0.0f), rootComponent(nullptr)
 {
 }
 
@@ -19,8 +19,12 @@ void mermaid::Application::clear()
     SDL_RenderClear(window.getRenderer());
 }
 
-void mermaid::Application::update(Context ctx)
+void mermaid::Application::update(mermaid::Context& ctx)
 {
+    if (rootComponent.get() == nullptr) {
+        return;
+    }
+    rootComponent->update(ctx);
 }
 
 void mermaid::Application::setRootComponent(std::unique_ptr<mermaid::components::Component>&& root)
@@ -40,7 +44,7 @@ bool mermaid::Application::processEvents()
     return false;
 }
 
-void mermaid::Application::draw(Context ctx)
+void mermaid::Application::draw(mermaid::Context& ctx)
 {
     if (rootComponent.get() == nullptr) {
         return;
@@ -73,7 +77,7 @@ void mermaid::Application::run()
 
     bool quit = false;
 
-    Context ctx;
+    mermaid::Context ctx;
 
     ctx.application = this;
     ctx.window = &window;

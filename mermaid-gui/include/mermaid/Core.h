@@ -1,5 +1,7 @@
 #ifndef MERMAID_CORE_H
 #define MERMAID_CORE_H
+
+#include <SDL2/SDL.h>
 #include <cstdint>
 #include <optional>
 #include <string>
@@ -7,6 +9,8 @@
 #include <variant>
 
 namespace mermaid {
+
+using String = std::u8string;
 
 struct Size
 {
@@ -36,6 +40,36 @@ struct Point
     }
 };
 
+struct Rect
+{
+    int x;
+    int y;
+    int width;
+    int height;
+
+    Rect() : x(0), y(0), width(0), height(0)
+    {
+    }
+
+    Rect(int x, int y, int width, int height) : x(x), y(y), width(width), height(height)
+    {
+    }
+
+    Rect(int width, int height) : x(0), y(0), width(width), height(height)
+    {
+    }
+
+    SDL_Rect toSdlRect()
+    {
+        SDL_Rect rect;
+        rect.x = x;
+        rect.y = y;
+        rect.w = width;
+        rect.h = height;
+        return rect;
+    }
+};
+
 struct Color
 {
     std::int8_t r;
@@ -58,9 +92,22 @@ struct Color
     Color(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a) : r(r), g(g), b(b), a(a)
     {
     }
+
+    SDL_Color toSdlColor()
+    {
+        SDL_Color color;
+
+        color.r = r;
+        color.g = g;
+        color.b = b;
+        color.a = a;
+
+        return color;
+    }
 };
 
-template <typename T> struct BoxProperties
+template <typename T>
+struct BoxProperties
 {
     T top;
     T bottom;
@@ -96,7 +143,8 @@ template <typename T> struct BoxProperties
     }
 };
 
-template <> struct BoxProperties<int>
+template <>
+struct BoxProperties<int>
 {
     int top;
     int bottom;
@@ -146,12 +194,13 @@ struct Border
 using Margin = BoxProperties<int>;
 using Padding = BoxProperties<int>;
 
-using Value = std::variant<std::string, int, float, bool, BoxProperties<int>, Border, Color, Size, Point>;
+using Value = std::variant<std::u8string, int, float, bool, BoxProperties<int>, Border, Color, Size, Point>;
 
 class Options
 {
   public:
-    template <typename T> std::optional<T> get(std::string key)
+    template <typename T>
+    std::optional<T> get(std::u8string key)
     {
         if (!options.contains(key) || !std::holds_alternative<T>(options[key])) {
             return std::nullopt;
@@ -160,70 +209,70 @@ class Options
         return std::get<T>(options[key]);
     }
 
-    bool has(std::string key)
+    bool has(std::u8string key)
     {
         return options.contains(key);
     }
 
-    void unset(std::string key)
+    void unset(std::u8string key)
     {
         if (has(key)) {
             options.erase(key);
         }
     }
 
-    void set(std::string key, std::string value)
+    void set(std::u8string key, std::u8string value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, const char* value)
+    void set(std::u8string key, const char8_t* value)
     {
-        options[key] = std::string(value);
+        options[key] = std::u8string(value);
     }
 
-    void set(std::string key, int value)
-    {
-        options[key] = value;
-    }
-
-    void set(std::string key, bool value)
+    void set(std::u8string key, int value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, float value)
+    void set(std::u8string key, bool value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, BoxProperties<int> value)
+    void set(std::u8string key, float value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, Border value)
+    void set(std::u8string key, BoxProperties<int> value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, Color value)
+    void set(std::u8string key, Border value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, Size value)
+    void set(std::u8string key, Color value)
     {
         options[key] = value;
     }
 
-    void set(std::string key, Point value)
+    void set(std::u8string key, Size value)
+    {
+        options[key] = value;
+    }
+
+    void set(std::u8string key, Point value)
     {
         options[key] = value;
     }
 
   private:
-    std::unordered_map<std::string, Value> options;
+    std::unordered_map<std::u8string, Value> options;
 };
 
 } // namespace mermaid

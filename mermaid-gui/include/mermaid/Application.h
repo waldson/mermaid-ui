@@ -18,8 +18,8 @@ class Application
   private:
     bool processEvents();
     void clear();
-    void update(mermaid::Context ctx);
-    void draw(mermaid::Context ctx);
+    void update(mermaid::Context& ctx);
+    void draw(mermaid::Context& ctx);
     void display();
 
     mermaid::SdlWindow& window;

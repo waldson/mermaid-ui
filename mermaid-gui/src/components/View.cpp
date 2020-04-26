@@ -1,6 +1,7 @@
 #include "mermaid/components/View.h"
-#include "mermaid/Context.h"
+
 #include "mermaid/Core.h"
+#include "mermaid/SdlContext.h"
 #include "mermaid/SdlWindow.h"
 #include "mermaid/components/Component.h"
 
@@ -8,14 +9,12 @@
 
 using namespace mermaid;
 
-mermaid::components::View::View(int x, int y, int width, int height)
+mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget(), components()
 {
-    options.set("position", Point(x, y));
-    options.set("size", Size(width, height));
-    options.set("backgroundColor", Color());
-    options.set("margin", Margin());
-    options.set("padding", Padding());
-    options.set("border", Border());
+    getPosition().x = x;
+    getPosition().y = x;
+    getSize().width = width;
+    getSize().height = height;
 }
 
 std::unique_ptr<mermaid::components::View> mermaid::components::View::create(int width, int height)
@@ -34,37 +33,37 @@ std::unique_ptr<mermaid::components::View> mermaid::components::View::create()
     return create(0, 0, 0, 0);
 }
 
-void mermaid::components::View::draw(Context ctx)
+void mermaid::components::View::draw(Context& ctx)
 {
-    auto bg = options.get<Color>("backgroundColor").value();
-    auto position = options.get<Point>("position").value();
-    auto size = options.get<Size>("size").value();
-
-    SDL_SetRenderDrawColor(ctx.window->getRenderer(), bg.r, bg.g, bg.b, bg.a);
-    SDL_Rect rect;
-    rect.x = position.x;
-    rect.y = position.y;
-    rect.w = size.width;
-    rect.h = size.height;
-
+    SDL_SetRenderDrawColor(ctx.window->getRenderer(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
+                           backgroundColor.a);
+    auto rect = getDrawRect().toSdlRect();
     SDL_RenderFillRect(ctx.window->getRenderer(), &rect);
 }
 
-void mermaid::components::View::update(Context ctx)
+Rect mermaid::components::View::getDrawRect()
+{
+    auto position = getPosition();
+    auto size = getSize();
+    Rect rect(position.x, position.y, size.width, size.height);
+    return rect;
+}
+
+void mermaid::components::View::update(Context& ctx)
 {
 }
 
 void mermaid::components::View::setBackground(Color color)
 {
-    options.set("backgroundColor", color);
+    backgroundColor = color;
 }
 
 void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a)
 {
-    options.set("backgroundColor", Color(r, g, b, a));
+    backgroundColor = Color(r, g, b, a);
 }
 
 void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b)
 {
-    options.set("backgroundColor", Color(r, g, b));
+    backgroundColor = Color(r, g, b);
 }

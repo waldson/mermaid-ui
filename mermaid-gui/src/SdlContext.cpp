@@ -1,6 +1,7 @@
 #include "mermaid/SdlContext.h"
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_ttf.h>
 #include <iostream>
 #include <stdexcept>
 #include <string_view>
@@ -14,13 +15,14 @@ mermaid::SdlContext::SdlContext() : initialized(false)
 mermaid::SdlContext::~SdlContext()
 {
     if (initialized) {
+        TTF_Quit();
         SDL_QuitSubSystem(SDL_INIT_EVERYTHING);
         SDL_Quit();
     }
 }
 
-std::unique_ptr<SdlWindow> mermaid::SdlContext::createWindow(std::string_view title, int x, int y, int width,
-                                                             int height, unsigned int options)
+std::unique_ptr<SdlWindow> mermaid::SdlContext::createWindow(std::u8string title, int x, int y, int width, int height,
+                                                             unsigned int options)
 {
     this->init();
     return SdlWindow::create(title, x, y, width, height, options);
@@ -41,5 +43,10 @@ void mermaid::SdlContext::init()
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
         throw std::runtime_error("Error initializing SDL.");
     }
+
+    if (TTF_Init() != 0) {
+        throw std::runtime_error("Error initializing TTF fonts.");
+    }
+
     initialized = true;
 }

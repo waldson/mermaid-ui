@@ -1,16 +1,18 @@
 #ifndef MERMAID_SDLWINDOW_H
 #define MERMAID_SDLWINDOW_H
-#include <SDL.h>
+
+#include "mermaid/SdlRenderer.h"
+
+#include <SDL2/SDL.h>
 #include <memory>
-#include <mermaid/SdlRenderer.h>
-#include <string_view>
+#include <string>
 
 namespace mermaid {
 
 class SdlWindow
 {
   public:
-    static std::unique_ptr<mermaid::SdlWindow> create(std::string_view title, int x, int y, int width, int height,
+    static std::unique_ptr<mermaid::SdlWindow> create(std::u8string title, int x, int y, int width, int height,
                                                       unsigned int options);
     ~SdlWindow();
 
@@ -20,9 +22,9 @@ class SdlWindow
     SDL_Window* asSdlPointer() const;
 
   private:
-    SdlWindow(std::string_view title, int x, int y, int width, int height, unsigned int options);
+    SdlWindow(std::u8string title, int x, int y, int width, int height, unsigned int options);
 
-    SdlWindow(std::string_view title, int x, int y, int width, int height, unsigned int options,
+    SdlWindow(std::u8string title, int x, int y, int width, int height, unsigned int options,
               unsigned int renderer_options);
 
     SDL_Window* sdl_window;

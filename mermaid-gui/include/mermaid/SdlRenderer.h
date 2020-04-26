@@ -1,6 +1,6 @@
 #ifndef MERMAID_SDLRENDERER_H
 #define MERMAID_SDLRENDERER_H
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <memory>
 
 namespace mermaid {

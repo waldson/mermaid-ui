@@ -6,9 +6,9 @@ namespace mermaid {
 struct Application;
 struct SdlWindow;
 
-class Context
+struct Context
 {
-  public:
+  /* public: */
     SdlWindow* window;
     Application* application;
     float deltaTime;
