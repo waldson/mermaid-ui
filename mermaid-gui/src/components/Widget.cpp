@@ -179,6 +179,13 @@ void mermaid::components::Widget::draw(Context& ctx)
     }
 }
 
+void mermaid::components::Widget::handleEvent(mermaid::Event& event, mermaid::Context& ctx)
+{
+    for (auto& child : children) {
+        child->handleEvent(event, ctx);
+    }
+}
+
 void mermaid::components::Widget::update(Context& ctx)
 {
     for (auto& child : children) {

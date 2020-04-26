@@ -1,6 +1,7 @@
 #include "mermaid/Application.h"
 
 #include "mermaid/Context.h"
+#include "mermaid/Event.h"
 #include "mermaid/SdlWindow.h"
 
 #include <SDL2/SDL.h>
@@ -27,18 +28,28 @@ void mermaid::Application::update(mermaid::Context& ctx)
     rootComponent->update(ctx);
 }
 
-void mermaid::Application::setRootComponent(std::shared_ptr<mermaid::components::Component> root)
+void mermaid::Application::setRootComponent(std::shared_ptr<mermaid::components::Widget> root)
 {
     rootComponent = root;
 }
 
-bool mermaid::Application::processEvents()
+bool mermaid::Application::processEvents(mermaid::Context& ctx)
 {
     SDL_Event e;
+
+    bool hasRootComponent = rootComponent.get() != nullptr;
+
     while (SDL_PollEvent(&e)) {
-        if (e.type == SDL_QUIT) {
+        auto event = mermaid::Event::fromRaw(e);
+        if (event.isQuitEvent()) {
             return true;
         }
+        if (!hasRootComponent) {
+            // must consume all events
+            continue;
+        }
+
+        rootComponent->handleEvent(event, ctx);
     }
 
     return false;
@@ -87,7 +98,7 @@ void mermaid::Application::run()
         begin = steady_clock::now();
 
         clear();
-        quit = processEvents();
+        quit = processEvents(ctx);
         update(ctx);
         draw(ctx);
         display();

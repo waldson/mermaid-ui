@@ -30,11 +30,12 @@ SET(LIBS ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
 ADD_LIBRARY(MermaidGui STATIC 
     # base
-    mermaid-gui/src/SdlContext.cpp
-    mermaid-gui/src/SdlWindow.cpp
-    mermaid-gui/src/SdlRenderer.cpp
     mermaid-gui/src/Application.cpp
+    mermaid-gui/src/Event.cpp
     mermaid-gui/src/Font.cpp
+    mermaid-gui/src/SdlContext.cpp
+    mermaid-gui/src/SdlRenderer.cpp
+    mermaid-gui/src/SdlWindow.cpp
     mermaid-gui/src/helpers/string_helper.cpp
 
     # components

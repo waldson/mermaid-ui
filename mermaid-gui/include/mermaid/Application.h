@@ -2,7 +2,7 @@
 #define APPLICATION_H
 #include "mermaid/Context.h"
 #include "mermaid/SdlWindow.h"
-#include "mermaid/components/Component.h"
+#include "mermaid/components/Widget.h"
 
 #include <memory>
 
@@ -12,11 +12,11 @@ class Application
 {
   public:
     Application(mermaid::SdlWindow& window);
-    void setRootComponent(std::shared_ptr<mermaid::components::Component> root);
+    void setRootComponent(std::shared_ptr<mermaid::components::Widget> root);
     void run();
 
   private:
-    bool processEvents();
+    bool processEvents(mermaid::Context& ctx);
     void clear();
     void update(mermaid::Context& ctx);
     void draw(mermaid::Context& ctx);
@@ -25,7 +25,7 @@ class Application
     mermaid::SdlWindow& window;
     bool running;
     float delta;
-    std::shared_ptr<mermaid::components::Component> rootComponent;
+    std::shared_ptr<mermaid::components::Widget> rootComponent;
 };
 } // namespace mermaid
 #endif

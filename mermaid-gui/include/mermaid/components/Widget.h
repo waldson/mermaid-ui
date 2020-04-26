@@ -3,6 +3,7 @@
 
 #include "mermaid/Context.h"
 #include "mermaid/Core.h"
+#include "mermaid/Event.h"
 #include "mermaid/components/Component.h"
 
 #include <memory>
@@ -13,11 +14,12 @@ namespace mermaid::components {
 
 class Widget : public Component, public std::enable_shared_from_this<mermaid::components::Widget>
 {
+    friend class mermaid::Application;
 
   public:
     virtual void draw(mermaid::Context& context);
     virtual void update(mermaid::Context& context);
-    virtual Rect getDrawRect();
+    virtual Rect getDrawRect() override;
 
     bool isVisible() override;
 
@@ -71,6 +73,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
   protected:
     Widget();
     Widget(std::shared_ptr<Widget> parent);
+    virtual void handleEvent(mermaid::Event& event, mermaid::Context& ctx);
 
   private:
     mermaid::Size size;
@@ -79,7 +82,9 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     mermaid::Margin margin;
     mermaid::Border border;
     mermaid::Options options;
+
     bool visible;
+
     std::weak_ptr<Widget> parent;
     std::vector<std::shared_ptr<mermaid::components::Widget>> children;
 };

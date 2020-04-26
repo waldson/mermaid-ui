@@ -6,7 +6,7 @@
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
-#include<iostream>
+#include <iostream>
 
 mermaid::components::Label::Label(std::u8string text, mermaid::Font& font) :
     text(text), font(font), color(0, 0, 0), dirty(true), textureCache(nullptr)
@@ -35,6 +35,13 @@ void mermaid::components::Label::update(Context& ctx)
         updateSize();
         updateTexture(ctx);
         dirty = false;
+    }
+}
+
+void mermaid::components::Label::handleEvent(mermaid::Event& event, mermaid::Context& ctx)
+{
+    if (event.isKeyDownEvent()) {
+        setText(u8"Working");
     }
 }
 
@@ -92,7 +99,7 @@ std::u8string mermaid::components::Label::getText()
     return text;
 }
 
-void mermaid::components::Label::setParent(std::shared_ptr<Widget> parent) 
+void mermaid::components::Label::setParent(std::shared_ptr<Widget> parent)
 {
     mermaid::components::Widget::setParent(parent);
     dirty = true;
