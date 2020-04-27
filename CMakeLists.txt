@@ -36,6 +36,7 @@ ADD_LIBRARY(MermaidGui STATIC
     mermaid-gui/src/SdlContext.cpp
     mermaid-gui/src/SdlRenderer.cpp
     mermaid-gui/src/SdlWindow.cpp
+    mermaid-gui/src/EventDispatcher.cpp
     mermaid-gui/src/helpers/string_helper.cpp
 
     # components

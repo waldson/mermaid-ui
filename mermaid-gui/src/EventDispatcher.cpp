@@ -6,7 +6,7 @@
 #include <algorithm>
 #include <iostream>
 
-void mermaid::EventDispatcher::on(std::u8string name, mermaid::EventDispatcher::CallbackType callback)
+void mermaid::EventDispatcher::on(const std::u8string& name, mermaid::EventDispatcher::CallbackType callback)
 {
     if (!listeners.contains(name)) {
         listeners[name] = std::vector<std::function<void(mermaid::Event&)>>();
@@ -14,7 +14,7 @@ void mermaid::EventDispatcher::on(std::u8string name, mermaid::EventDispatcher::
     listeners.at(name).push_back(callback);
 }
 
-void mermaid::EventDispatcher::off(std::u8string name)
+void mermaid::EventDispatcher::off(const std::u8string& name)
 {
     if (!listeners.contains(name)) {
         return;
@@ -22,7 +22,7 @@ void mermaid::EventDispatcher::off(std::u8string name)
     listeners.at(name).clear();
 }
 
-void mermaid::EventDispatcher::emit(std::u8string name, mermaid::Event& event)
+void mermaid::EventDispatcher::emit(const std::u8string& name, mermaid::Event& event)
 {
     if (!listeners.contains(name)) {
         return;
@@ -42,7 +42,7 @@ void mermaid::EventDispatcher::emit(std::u8string name, mermaid::Event& event)
     }
 }
 
-void mermaid::EventDispatcher::emit(std::u8string name)
+void mermaid::EventDispatcher::emit(const std::u8string& name)
 {
     auto event = mermaid::Event::createUserEvent();
     emit(name, event);

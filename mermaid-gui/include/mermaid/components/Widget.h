@@ -4,6 +4,7 @@
 #include "mermaid/Context.h"
 #include "mermaid/Core.h"
 #include "mermaid/Event.h"
+#include "mermaid/EventDispatcher.h"
 #include "mermaid/components/Component.h"
 
 #include <memory>
@@ -70,6 +71,47 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     bool hasOption(std::u8string key);
     void setOption(std::u8string key);
 
+    void on(const std::u8string& name, mermaid::EventDispatcher::CallbackType callback);
+    void off(const std::u8string& name);
+    void emit(const std::u8string& name);
+    void emit(const std::u8string& name, mermaid::Event& evt);
+
+    inline virtual void onMouseEnter(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onMouseLeave(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onMouseMove(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onMouseDown(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onMouseUp(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onClick(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onKeyUp(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onKeyDown(mermaid::Event&)
+    {
+    }
+
+    inline virtual void onTextInput(mermaid::Event&)
+    {
+    }
+
   protected:
     Widget();
     Widget(std::shared_ptr<Widget> parent);
@@ -82,6 +124,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     mermaid::Margin margin;
     mermaid::Border border;
     mermaid::Options options;
+    mermaid::EventDispatcher dispatcher;
 
     bool visible;
 

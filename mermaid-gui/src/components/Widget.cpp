@@ -190,3 +190,23 @@ void mermaid::components::Widget::update(Context& ctx)
         child->update(ctx);
     }
 }
+
+void mermaid::components::Widget::on(const std::u8string& name, mermaid::EventDispatcher::CallbackType callback)
+{
+    dispatcher.on(name, callback);
+}
+
+void mermaid::components::Widget::off(const std::u8string& name)
+{
+    dispatcher.off(name);
+}
+
+void mermaid::components::Widget::emit(const std::u8string& name)
+{
+    dispatcher.emit(name);
+}
+
+void mermaid::components::Widget::emit(const std::u8string& name, mermaid::Event& evt)
+{
+    dispatcher.emit(name, evt);
+}
