@@ -1,7 +1,42 @@
 #include "mermaid/Event.h"
 
-mermaid::Event::Event(EventType type, SDL_Event& rawEvent) : type(type), rawEvent(rawEvent)
+mermaid::Event::Event(EventType type, SDL_Event& rawEvent) :
+    type(type), rawEvent(rawEvent), canceled(false), defaultPrevented(false)
 {
+    timestamp = SDL_GetTicks();
+}
+
+mermaid::Event::Event(EventType type, SDL_Event& rawEvent, unsigned int timestamp) :
+    type(type), rawEvent(rawEvent), timestamp(timestamp), canceled(false), defaultPrevented(false)
+{
+}
+
+mermaid::Event::Event(EventType type, SDL_Event& rawEvent, unsigned int timestamp, std::any userData) :
+    type(type), rawEvent(rawEvent), timestamp(timestamp), userData(userData), canceled(false), defaultPrevented(false)
+{
+}
+
+mermaid::Event mermaid::Event::createUserEvent(std::any data)
+{
+    SDL_Event sdl;
+    sdl.type = SDL_USEREVENT;
+    return mermaid::Event(EventType::UserEvent, sdl, SDL_GetTicks(), data);
+}
+
+mermaid::Event mermaid::Event::createUserEvent()
+{
+    SDL_Event sdl;
+    sdl.type = SDL_USEREVENT;
+    return mermaid::Event(EventType::UserEvent, sdl, SDL_GetTicks());
+}
+
+std::optional<std::any> mermaid::Event::getUserData()
+{
+    if (!userData.has_value()) {
+        return std::nullopt;
+    }
+
+    return userData;
 }
 
 bool mermaid::Event::isWindowEvent()
@@ -104,4 +139,29 @@ mermaid::Event mermaid::Event::fromRaw(SDL_Event& evt)
     }
 
     return mermaid::Event(type, evt);
+}
+
+bool mermaid::Event::isDefaultPrevented()
+{
+    return defaultPrevented;
+}
+
+bool mermaid::Event::isCanceled()
+{
+    return canceled;
+}
+
+void mermaid::Event::stopPropagation()
+{
+    canceled = true;
+}
+
+void mermaid::Event::preventDefault()
+{
+    defaultPrevented = true;
+}
+
+unsigned int mermaid::Event::getTimestamp()
+{
+    return timestamp;
 }
