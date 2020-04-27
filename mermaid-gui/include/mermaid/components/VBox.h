@@ -8,15 +8,15 @@
 
 namespace mermaid::components {
 
-class VBox: public Widget {
+class VBox : public Widget
+{
   public:
-    static std::shared_ptr<mermaid::components::VBox> create();
+    static std::shared_ptr<mermaid::components::VBox> create(int spacing = 0);
     void update(Context& ctx) override;
 
   private:
-    VBox();
-    mermaid::Rect rect;
-
+    VBox(int spacing);
+    int spacing;
 };
-} //namespace mermaid::components
+} // namespace mermaid::components
 #endif
