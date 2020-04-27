@@ -23,7 +23,6 @@ class Label : public Widget
     void draw(Context& ctx) override;
     void update(Context& ctx) override;
     Rect getDrawRect() override;
-    void handleEvent(mermaid::Event& event, mermaid::Context& ctx) override;
     void setParent(std::shared_ptr<Widget> parent) override;
 
     std::u8string getText();

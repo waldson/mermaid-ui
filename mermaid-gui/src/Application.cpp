@@ -37,14 +37,14 @@ bool mermaid::Application::processEvents(mermaid::Context& ctx)
 {
     SDL_Event e;
 
-    bool hasRootComponent = rootComponent.get() != nullptr;
+    bool hasRoot = hasRootComponent();
 
     while (SDL_PollEvent(&e)) {
         auto event = mermaid::Event::fromRaw(e);
         if (event.isQuitEvent()) {
             return true;
         }
-        if (!hasRootComponent) {
+        if (!hasRoot) {
             // must consume all events
             continue;
         }
@@ -111,5 +111,34 @@ void mermaid::Application::run()
         if (this->delta < frame_duration) {
             SDL_Delay(frame_duration - this->delta);
         }
+    }
+}
+
+bool mermaid::Application::hasRootComponent()
+{
+    return rootComponent.get() != nullptr;
+}
+
+std::vector<mermaid::components::Widget*> mermaid::Application::raycast(mermaid::Point& point)
+{
+    std::vector<mermaid::components::Widget*> widgets;
+    if (hasRootComponent()) {
+        doRaycast(point, *rootComponent, widgets);
+    }
+
+    return widgets;
+}
+
+void mermaid::Application::doRaycast(mermaid::Point& point, mermaid::components::Widget& current,
+                                     std::vector<mermaid::components::Widget*>& container)
+{
+    // children first to make it bubble instead of capturing
+    for (auto& child : current.getChildren()) {
+        doRaycast(point, *child, container);
+    }
+
+    auto rect = current.getDrawRect();
+    if (rect.contains(point)) {
+        container.push_back(&current);
     }
 }

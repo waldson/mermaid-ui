@@ -38,13 +38,6 @@ void mermaid::components::Label::update(Context& ctx)
     }
 }
 
-void mermaid::components::Label::handleEvent(mermaid::Event& event, mermaid::Context& ctx)
-{
-    if (event.isKeyDownEvent()) {
-        setText(u8"Working");
-    }
-}
-
 void mermaid::components::Label::updateSize()
 {
     auto str = mermaid::helpers::from_u8string(text);

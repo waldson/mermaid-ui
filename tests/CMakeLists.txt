@@ -9,6 +9,7 @@ ADD_EXECUTABLE(mermaid-rpg-tests
     src/main.cpp
     src/WidgetTest.cpp
     src/RectTest.cpp
+    src/ApplicationTest.cpp
 )
 TARGET_LINK_LIBRARIES(mermaid-rpg-tests PUBLIC Catch MermaidGui)
 
