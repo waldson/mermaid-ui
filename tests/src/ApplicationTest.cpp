@@ -29,6 +29,7 @@ TEST_CASE("Application raycasts through widgets", "[Application]")
     REQUIRE(std::find(targets.begin(), targets.end(), &*raycasted) != targets.end());
     REQUIRE(std::find(targets.begin(), targets.end(), &*notRaycasted) == targets.end());
     REQUIRE(targets.size() == 2);
+
     REQUIRE(targets[0] == &*raycasted);
     REQUIRE(targets[1] == &*root);
 }

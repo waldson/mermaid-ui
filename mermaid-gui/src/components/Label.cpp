@@ -6,7 +6,6 @@
 
 #include <SDL2/SDL_surface.h>
 #include <SDL2/SDL_ttf.h>
-#include <iostream>
 
 mermaid::components::Label::Label(std::u8string text, mermaid::Font& font) :
     text(text), font(font), color(0, 0, 0), dirty(true), textureCache(nullptr)

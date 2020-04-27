@@ -60,3 +60,18 @@ void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, st
 {
     backgroundColor = Color(r, g, b);
 }
+
+void mermaid::components::View::handleEvent(mermaid::Event& event, mermaid::Context& ctx)
+{
+    if (event.isMouseMotionEvent()) {
+        auto evt = event.getRawEvent();
+        mermaid::Point p(evt.motion.x, evt.motion.y);
+        auto rect = getDrawRect();
+        if (rect.contains(p)) {
+            setBackground(Color(150, 50, 50));
+        }
+        else {
+            setBackground(Color(50, 150, 50));
+        }
+    }
+}

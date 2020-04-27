@@ -4,7 +4,6 @@
 #include "mermaid/helpers/string_helper.h"
 
 #include <SDL2/SDL.h>
-#include <iostream>
 #include <memory>
 #include <string>
 

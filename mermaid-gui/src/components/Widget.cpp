@@ -1,7 +1,5 @@
 #include "mermaid/components/Widget.h"
 
-#include <iostream>
-
 mermaid::components::Widget::Widget() :
     size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true)
 {

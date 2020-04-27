@@ -2,7 +2,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <iostream>
 #include <stdexcept>
 #include <string_view>
 

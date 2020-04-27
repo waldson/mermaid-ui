@@ -5,7 +5,6 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
-#include <iostream>
 #include <memory>
 
 mermaid::Font::Font(std::u8string name, unsigned size) : name(name), size(size), font(nullptr)

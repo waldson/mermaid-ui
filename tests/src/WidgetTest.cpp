@@ -1,8 +1,6 @@
 #include "catch2/catch.hpp"
-#include "mermaid/components/View.h"
 #include "mermaid/Core.h"
-
-#include <iostream>
+#include "mermaid/components/View.h"
 
 TEST_CASE("Parent show be set correctly", "[Widget]")
 {
@@ -54,7 +52,8 @@ TEST_CASE("Visibility must be set correctly", "[Widget]")
     REQUIRE(view->isVisible());
 }
 
-TEST_CASE("ViewRect must reflect position and size", "[Widget]" ) {
+TEST_CASE("ViewRect must reflect position and size", "[Widget]")
+{
     auto view = mermaid::components::View::create();
     view->setPosition(10, 20);
     view->setSize(30, 40);
@@ -67,7 +66,8 @@ TEST_CASE("ViewRect must reflect position and size", "[Widget]" ) {
     REQUIRE(rect.height == 40);
 }
 
-TEST_CASE("Widget drawRect must be relative to its parent", "[Widget]" ) {
+TEST_CASE("Widget drawRect must be relative to its parent", "[Widget]")
+{
     auto parent = mermaid::components::View::create();
     parent->setPosition(10, 20);
 
