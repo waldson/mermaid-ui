@@ -32,6 +32,16 @@ class Application
     bool running;
     float delta;
     std::shared_ptr<mermaid::components::Widget> rootComponent;
+    std::vector<mermaid::components::Widget*> previousHoveredWidgets;
+
+    void handleMouseMotionEvents(SDL_Event& evt, mermaid::Context& ctx);
+
+    std::vector<mermaid::components::Widget*> included(std::vector<mermaid::components::Widget*> previous,
+                                                       std::vector<mermaid::components::Widget*> current);
+    std::vector<mermaid::components::Widget*> excluded(std::vector<mermaid::components::Widget*> previous,
+                                                       std::vector<mermaid::components::Widget*> current);
+    std::vector<mermaid::components::Widget*> kept(std::vector<mermaid::components::Widget*> previous,
+                                                   std::vector<mermaid::components::Widget*> current);
 };
 } // namespace mermaid
 #endif
