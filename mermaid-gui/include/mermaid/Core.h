@@ -129,6 +129,36 @@ struct Rect
         rect.h = height;
         return rect;
     }
+
+    inline bool intersects(const Rect& other)
+    {
+        mermaid::Point p1(other.x, other.y);
+        if (contains(p1)) {
+            return true;
+        }
+
+        mermaid::Point p2(other.x + other.width, other.y);
+        if (contains(p2)) {
+            return true;
+        }
+
+        mermaid::Point p3(other.x, other.y + other.height);
+        if (contains(p3)) {
+            return true;
+        }
+
+        mermaid::Point p4(other.x + other.width, other.y);
+        if (contains(p4)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    inline bool contains(const Point& point)
+    {
+        return point.x >= x && point.x <= (x + width) && point.y >= y && point.y <= (y + height);
+    }
 };
 
 struct Color
