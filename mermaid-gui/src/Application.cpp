@@ -45,6 +45,7 @@ bool mermaid::Application::processEvents(mermaid::Context& ctx)
         if (event.isQuitEvent()) {
             return true;
         }
+
         if (!hasRoot) {
             // must consume all events
             continue;
@@ -52,14 +53,89 @@ bool mermaid::Application::processEvents(mermaid::Context& ctx)
 
         rootComponent->handleEvent(event, ctx);
 
+        if (event.isCanceled()) {
+            continue;
+        }
+
         if (event.isMouseMotionEvent()) {
             handleMouseMotionEvents(e, ctx);
         } else if (event.isMouseButtonDownEvent()) {
+            handleMouseButtonDownEvents(e, ctx);
         } else if (event.isMouseButtonUpEvent()) {
+            handleMouseButtonUpEvents(e, ctx);
         }
     }
 
     return false;
+}
+
+void mermaid::Application::handleMouseButtonDownEvents(SDL_Event& e, mermaid::Context& ctx)
+{
+    mermaid::Point location(e.button.x, e.motion.y);
+    auto currentMouseDownWidgets = raycast(location);
+
+    if (!latestMouseDownWidgets.contains(e.button.button)) {
+        latestMouseDownWidgets[e.button.button] = std::vector<mermaid::components::Widget*>();
+    } else {
+        latestMouseDownWidgets.at(e.button.button).clear();
+    }
+
+    auto evt = mermaid::Event::fromRaw(e);
+
+    for (auto w : currentMouseDownWidgets) {
+        if (evt.isCanceled()) {
+            break;
+        }
+
+        w->emit(u8"mouseDown", evt);
+
+        if (!evt.isDefaultPrevented() && !evt.isCanceled()) {
+            w->onMouseDown(evt);
+        }
+    }
+    latestMouseDownWidgets[e.button.button] = currentMouseDownWidgets;
+}
+
+void mermaid::Application::handleMouseButtonUpEvents(SDL_Event& e, mermaid::Context& ctx)
+{
+    mermaid::Point location(e.button.x, e.motion.y);
+    auto currentMouseUpWidgets = raycast(location);
+
+    auto evt = mermaid::Event::fromRaw(e);
+
+    for (auto w : currentMouseUpWidgets) {
+        if (evt.isCanceled()) {
+            break;
+        }
+
+        w->emit(u8"mouseUp", evt);
+
+        if (!evt.isDefaultPrevented() && !evt.isCanceled()) {
+            w->onMouseUp(evt);
+        }
+    }
+
+    auto clicked = kept(latestMouseDownWidgets[e.button.button], currentMouseUpWidgets);
+
+    auto evtMouseClick = mermaid::Event::fromRaw(e);
+    for (auto w : clicked) {
+        if (evtMouseClick.isCanceled()) {
+            break;
+        }
+        w->handleEvent(evtMouseClick, ctx);
+
+        if (evtMouseClick.isCanceled()) {
+            break;
+        }
+
+        w->emit(u8"click", evtMouseClick);
+
+        if (!evtMouseClick.isDefaultPrevented() && !evtMouseClick.isCanceled()) {
+            w->onClick(evtMouseClick);
+        }
+    }
+
+    latestMouseDownWidgets[e.button.button].clear();
 }
 
 void mermaid::Application::handleMouseMotionEvents(SDL_Event& e, mermaid::Context& ctx)
@@ -108,6 +184,7 @@ void mermaid::Application::handleMouseMotionEvents(SDL_Event& e, mermaid::Contex
     }
 
     auto evtMouseMove = mermaid::Event::fromRaw(e);
+
     for (auto w : keptWidgets) {
         if (evtMouseMove.isCanceled()) {
             break;

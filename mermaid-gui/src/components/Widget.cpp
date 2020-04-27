@@ -180,6 +180,9 @@ void mermaid::components::Widget::draw(Context& ctx)
 void mermaid::components::Widget::handleEvent(mermaid::Event& event, mermaid::Context& ctx)
 {
     for (auto& child : children) {
+        if (event.isCanceled()) {
+            break;
+        }
         child->handleEvent(event, ctx);
     }
 }
@@ -203,10 +206,13 @@ void mermaid::components::Widget::off(const std::u8string& name)
 
 void mermaid::components::Widget::emit(const std::u8string& name)
 {
-    dispatcher.emit(name);
+    auto event = mermaid::Event::createUserEvent();
+    event.target = this;
+    dispatcher.emit(name, event);
 }
 
 void mermaid::components::Widget::emit(const std::u8string& name, mermaid::Event& evt)
 {
+    evt.target = this;
     dispatcher.emit(name, evt);
 }

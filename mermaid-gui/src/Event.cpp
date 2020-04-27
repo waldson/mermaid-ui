@@ -1,18 +1,19 @@
 #include "mermaid/Event.h"
 
 mermaid::Event::Event(EventType type, SDL_Event& rawEvent) :
-    type(type), rawEvent(rawEvent), canceled(false), defaultPrevented(false)
+    type(type), rawEvent(rawEvent), canceled(false), defaultPrevented(false), target(nullptr)
 {
     timestamp = SDL_GetTicks();
 }
 
 mermaid::Event::Event(EventType type, SDL_Event& rawEvent, unsigned int timestamp) :
-    type(type), rawEvent(rawEvent), timestamp(timestamp), canceled(false), defaultPrevented(false)
+    type(type), rawEvent(rawEvent), timestamp(timestamp), canceled(false), defaultPrevented(false), target(nullptr)
 {
 }
 
 mermaid::Event::Event(EventType type, SDL_Event& rawEvent, unsigned int timestamp, std::any userData) :
-    type(type), rawEvent(rawEvent), timestamp(timestamp), userData(userData), canceled(false), defaultPrevented(false)
+    type(type), rawEvent(rawEvent), timestamp(timestamp), userData(userData), canceled(false), defaultPrevented(false),
+    target(nullptr)
 {
 }
 
@@ -102,43 +103,54 @@ SDL_Event& mermaid::Event::getRawEvent()
 mermaid::Event mermaid::Event::fromRaw(SDL_Event& evt)
 {
     mermaid::EventType type(mermaid::EventType::UnknownEvent);
+    unsigned int timestamp = 0;
 
     switch (evt.type) {
         case SDL_QUIT:
             type = mermaid::EventType::QuitEvent;
+            timestamp = evt.quit.timestamp;
             break;
         case SDL_WINDOWEVENT:
             type = mermaid::EventType::WindowEvent;
+            timestamp = evt.window.timestamp;
             break;
         case SDL_KEYDOWN:
             type = mermaid::EventType::KeyDownEvent;
+            timestamp = evt.key.timestamp;
             break;
 
         case SDL_KEYUP:
             type = mermaid::EventType::KeyUpEvent;
+            timestamp = evt.key.timestamp;
             break;
 
         case SDL_TEXTINPUT:
             type = mermaid::EventType::TextInputEvent;
+            timestamp = evt.text.timestamp;
             break;
         case SDL_TEXTEDITING:
             type = mermaid::EventType::TextEditingEvent;
+            timestamp = evt.text.timestamp;
             break;
         case SDL_MOUSEMOTION:
             type = mermaid::EventType::MouseMotionEvent;
+            timestamp = evt.motion.timestamp;
             break;
         case SDL_MOUSEBUTTONDOWN:
             type = mermaid::EventType::MouseButtonDownEvent;
+            timestamp = evt.button.timestamp;
             break;
         case SDL_MOUSEBUTTONUP:
             type = mermaid::EventType::MouseButtonUpEvent;
+            timestamp = evt.button.timestamp;
             break;
         case SDL_MOUSEWHEEL:
             type = mermaid::EventType::MouseWheelEvent;
+            timestamp = evt.wheel.timestamp;
             break;
     }
 
-    return mermaid::Event(type, evt);
+    return mermaid::Event(type, evt, timestamp);
 }
 
 bool mermaid::Event::isDefaultPrevented()
@@ -164,4 +176,9 @@ void mermaid::Event::preventDefault()
 unsigned int mermaid::Event::getTimestamp()
 {
     return timestamp;
+}
+
+mermaid::components::Widget* mermaid::Event::getTarget()
+{
+    return target;
 }

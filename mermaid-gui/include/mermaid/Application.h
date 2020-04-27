@@ -5,6 +5,7 @@
 #include "mermaid/components/Widget.h"
 
 #include <memory>
+#include <unordered_map>
 #include <vector>
 
 namespace mermaid {
@@ -35,6 +36,8 @@ class Application
     std::vector<mermaid::components::Widget*> previousHoveredWidgets;
 
     void handleMouseMotionEvents(SDL_Event& evt, mermaid::Context& ctx);
+    void handleMouseButtonDownEvents(SDL_Event& evt, mermaid::Context& ctx);
+    void handleMouseButtonUpEvents(SDL_Event& evt, mermaid::Context& ctx);
 
     std::vector<mermaid::components::Widget*> included(std::vector<mermaid::components::Widget*> previous,
                                                        std::vector<mermaid::components::Widget*> current);
@@ -42,6 +45,8 @@ class Application
                                                        std::vector<mermaid::components::Widget*> current);
     std::vector<mermaid::components::Widget*> kept(std::vector<mermaid::components::Widget*> previous,
                                                    std::vector<mermaid::components::Widget*> current);
+
+    std::unordered_map<int, std::vector<mermaid::components::Widget*>> latestMouseDownWidgets;
 };
 } // namespace mermaid
 #endif

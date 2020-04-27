@@ -20,15 +20,24 @@ enum class EventType
     KeyDownEvent,
     KeyUpEvent,
     UserEvent,
+    ActionPerformedEvent,
     UnknownEvent
 };
 
+namespace components {
+class Widget;
+}
+
 class Event
 {
+    // to set target
+    friend class mermaid::components::Widget;
+
   public:
     Event(EventType type, SDL_Event& rawEvent);
     Event(EventType type, SDL_Event& rawEvent, unsigned int timestamp);
     Event(EventType type, SDL_Event& rawEvent, unsigned int timestamp, std::any userData);
+
     bool isWindowEvent();
     bool isMouseMotionEvent();
     bool isMouseButtonDownEvent();
@@ -51,6 +60,7 @@ class Event
     static Event createUserEvent(std::any data);
     static Event createUserEvent();
     unsigned int getTimestamp();
+    mermaid::components::Widget* getTarget();
 
   private:
     SDL_Event& rawEvent;
@@ -59,6 +69,7 @@ class Event
     std::any userData;
     bool canceled;
     bool defaultPrevented;
+    mermaid::components::Widget* target;
 };
 } // namespace mermaid
 #endif
