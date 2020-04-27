@@ -49,7 +49,7 @@ class Event
     bool isKeyDownEvent();
     bool isKeyUpEvent();
     bool isUserEvent();
-    SDL_Event& getRawEvent();
+    const SDL_Event& getRawEvent();
     static mermaid::Event fromRaw(SDL_Event& evt);
     void stopPropagation();
     void preventDefault();

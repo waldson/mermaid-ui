@@ -95,7 +95,7 @@ bool mermaid::Event::isUserEvent()
     return type == mermaid::EventType::UserEvent;
 }
 
-SDL_Event& mermaid::Event::getRawEvent()
+const SDL_Event& mermaid::Event::getRawEvent()
 {
     return rawEvent;
 }
