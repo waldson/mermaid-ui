@@ -4,7 +4,6 @@
 #include "mermaid/Event.h"
 
 #include <algorithm>
-#include <iostream>
 
 void mermaid::EventDispatcher::on(const std::u8string& name, mermaid::EventDispatcher::CallbackType callback)
 {

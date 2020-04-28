@@ -22,31 +22,32 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     virtual void update(mermaid::Context& context);
     virtual Rect getDrawRect() override;
 
-    bool isVisible() override;
+    virtual bool isVisible() override;
 
     virtual ~Widget() = default;
 
-    mermaid::Size& getSize();
-    void setSize(int width, int height);
-    void setSize(mermaid::Size p);
+    virtual mermaid::Size getSize();
+    virtual void setSize(int width, int height);
+    virtual void setSize(mermaid::Size p);
 
-    mermaid::Point& getPosition();
-    void setPosition(int x, int y);
-    void setPosition(mermaid::Point p);
+    virtual mermaid::Point getPosition();
+    virtual void setPosition(int x, int y);
+    virtual void setPosition(mermaid::Point p);
 
     mermaid::Padding& getPadding();
     mermaid::Margin& getMargin();
     mermaid::Border& getBorder();
     mermaid::Options& getOptions();
 
-    void setVisible(bool visible);
-    void show();
-    void hide();
-    void toggleVisibility();
+    virtual void setVisible(bool visible);
+    virtual void show();
+    virtual void hide();
+    virtual void toggleVisibility();
 
     virtual bool hasParent();
     virtual void setParent(std::shared_ptr<Widget> parent);
     virtual std::optional<std::shared_ptr<Widget>> getParent();
+    virtual mermaid::Point getParentPosition();
 
     virtual void addChild(std::shared_ptr<mermaid::components::Widget> child);
     virtual bool removeChild(std::shared_ptr<mermaid::components::Widget> child);

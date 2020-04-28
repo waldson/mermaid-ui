@@ -7,12 +7,32 @@ RPG Session Manager. Programmer Style.
 
 - [X] Managed Font, Renderer and Window
 - [-] Application
-- [ ] Event system
-- [o] Widget System
+- [.] Event system
+    - [X] Mouse Enter
+    - [X] Mouse Leave
+    - [X] Mouse Move
+    - [X] Click
+    - [ ] Drag Start
+    - [ ] Drag Move
+    - [ ] Drag End
+    - [ ] Key Down
+    - [ ] Key Up
+    - [ ] TextInput
+    - [ ] Improve Event Info (e.g.: event local position)
+    - [ ] Window Enter
+    - [ ] Window Leave
+    - [ ] Window Move
+    - [ ] Window Re size
+    - [ ] Focus in
+    - [ ] Focus out
+- [.] Widget System
     - [X] View
     - [X] Label
     - [X] HBox
     - [X] VBox
+    - [ ] Button
+        - [ ] Make it work when mouse leaves and comes back with button down
+        - [ ] WindowLeave return it to default state
     - [ ] Image
     - [ ] TextInput
     - [ ] Checkbox

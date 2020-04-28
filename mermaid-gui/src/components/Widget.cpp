@@ -10,7 +10,7 @@ mermaid::components::Widget::Widget(std::shared_ptr<Widget> parent) :
 {
 }
 
-mermaid::Size& mermaid::components::Widget::getSize()
+mermaid::Size mermaid::components::Widget::getSize()
 {
     return size;
 }
@@ -37,7 +37,7 @@ void mermaid::components::Widget::setPosition(mermaid::Point p)
     position = p;
 }
 
-mermaid::Point& mermaid::components::Widget::getPosition()
+mermaid::Point mermaid::components::Widget::getPosition()
 {
     return position;
 }
@@ -185,6 +185,15 @@ void mermaid::components::Widget::handleEvent(mermaid::Event& event, mermaid::Co
         }
         child->handleEvent(event, ctx);
     }
+}
+
+mermaid::Point mermaid::components::Widget::getParentPosition()
+{
+    if (!hasParent()) {
+        return Point();
+    }
+
+    return parent.lock()->getPosition();
 }
 
 void mermaid::components::Widget::update(Context& ctx)

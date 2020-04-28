@@ -10,6 +10,7 @@
 mermaid::components::Label::Label(std::u8string text, mermaid::Font& font) :
     text(text), font(font), color(0, 0, 0), dirty(true), textureCache(nullptr)
 {
+    updateSize();
 }
 
 mermaid::components::Label::~Label()
@@ -40,31 +41,36 @@ void mermaid::components::Label::update(Context& ctx)
 void mermaid::components::Label::updateSize()
 {
     auto str = mermaid::helpers::from_u8string(text);
-    TTF_SizeUTF8(font.asSdlPointer(), str.c_str(), &rect.width, &rect.height);
+    mermaid::Size size;
+    TTF_SizeUTF8(font.asSdlPointer(), str.c_str(), &size.width, &size.height);
+    setSize(size);
 }
 
-mermaid::Rect mermaid::components::Label::getDrawRect()
-{
-    rect.x = getPosition().x;
-    rect.y = getPosition().y;
+/* mermaid::Rect mermaid::components::Label::getDrawRect() */
+/* { */
+/*     rect.x = getPosition().x; */
+/*     rect.y = getPosition().y; */
 
-    if (dirty) {
-        updateSize();
-    }
+/*     if (dirty) { */
+/*         updateSize(); */
+/*     } */
 
-    mermaid::Rect parentRect(0, 0, 0, 0);
-    if (hasParent()) {
-        parentRect = getParent().value()->getDrawRect();
-    }
+/*     mermaid::Rect parentRect(0, 0, 0, 0); */
+/*     if (hasParent()) { */
+/*         parentRect = getParent().value()->getDrawRect(); */
+/*     } */
 
-    return mermaid::Rect(parentRect.x + rect.x, parentRect.y + rect.y, rect.width, rect.height);
-}
+/*     return mermaid::Rect(parentRect.x + rect.x, parentRect.y + rect.y, rect.width, rect.height); */
+/* } */
 
 void mermaid::components::Label::draw(Context& ctx)
 {
     if (textureCache) {
         auto rect = getDrawRect().toSdlRect();
+
         SDL_RenderCopy(ctx.window->getRenderer(), textureCache, nullptr, &rect);
+    } else {
+        dirty = true;
     }
 }
 
@@ -72,6 +78,11 @@ void mermaid::components::Label::setColor(Color color)
 {
     this->color = color;
     dirty = true;
+}
+
+mermaid::Color mermaid::components::Label::getColor()
+{
+    return color;
 }
 
 void mermaid::components::Label::setText(std::u8string text)
@@ -84,6 +95,11 @@ void mermaid::components::Label::setFont(Font& font)
 {
     this->font = font;
     dirty = true;
+}
+
+mermaid::Font& mermaid::components::Label::getFont()
+{
+    return font;
 }
 
 std::u8string mermaid::components::Label::getText()

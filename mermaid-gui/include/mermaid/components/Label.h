@@ -17,12 +17,12 @@ class Label : public Widget
     static std::shared_ptr<mermaid::components::Label> create(std::u8string text, mermaid::Font& font);
 
     void setColor(Color color);
+    Color getColor();
     void setFont(Font& font);
     void setText(std::u8string text);
 
     void draw(Context& ctx) override;
     void update(Context& ctx) override;
-    Rect getDrawRect() override;
     void setParent(std::shared_ptr<Widget> parent) override;
 
     std::u8string getText();
@@ -38,7 +38,6 @@ class Label : public Widget
     mermaid::Font& font;
     mermaid::Color color;
     bool dirty;
-    mermaid::Rect rect;
     SDL_Texture* textureCache;
 };
 } // namespace mermaid::components

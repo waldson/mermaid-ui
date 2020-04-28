@@ -163,10 +163,11 @@ struct Rect
 
 struct Color
 {
-    std::int8_t r;
-    std::int8_t g;
-    std::int8_t b;
-    std::int8_t a;
+    // TODO: change to 8bit unsigned int
+    int r;
+    int g;
+    int b;
+    int a;
 
     Color() : r(0), g(0), b(0), a(255)
     {

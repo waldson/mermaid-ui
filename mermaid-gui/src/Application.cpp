@@ -7,7 +7,6 @@
 #include <SDL2/SDL.h>
 #include <algorithm>
 #include <chrono>
-#include <iostream>
 #include <memory>
 
 mermaid::Application::Application(mermaid::SdlWindow& window) :

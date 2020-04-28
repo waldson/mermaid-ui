@@ -25,8 +25,10 @@ class View : public Widget
 
     void draw(Context& ctx) override;
 
-  private:
+  protected:
     View(int x, int y, int width, int height);
+
+  private:
     mermaid::Color backgroundColor;
 };
 } // namespace mermaid::components

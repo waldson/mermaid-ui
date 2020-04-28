@@ -12,10 +12,8 @@ using namespace mermaid;
 
 mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget()
 {
-    getPosition().x = x;
-    getPosition().y = x;
-    getSize().width = width;
-    getSize().height = height;
+    setPosition(x, y);
+    setSize(width, height);
 }
 
 std::shared_ptr<mermaid::components::View> mermaid::components::View::create(int width, int height)
