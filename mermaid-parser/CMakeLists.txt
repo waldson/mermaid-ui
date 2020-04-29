@@ -1,0 +1,17 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 3.16)
+PROJECT(mermaid-parser)
+
+SET(CMAKE_CXX_STANDARD 20)
+# SET(CMAKE_CXX_CLANG_TIDY "clang-tidy;-checks=*")
+SET(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+INCLUDE_DIRECTORIES(
+    include/
+)
+
+ADD_EXECUTABLE(
+    mm 
+    src/main.cpp
+    src/Parser.cpp
+)
+#TARGET_LINK_LIBRARIES(mm ${FLEX_LIBRARIES})
