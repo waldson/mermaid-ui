@@ -80,7 +80,7 @@ std::string mermaid::parser::Lexer::consume(const std::string& text)
                                          "Unexpected char. Expected:" + charToString(c) + ", found: " + charToString(peek()));
         }
     }
-    return "";
+    return text;
 }
 
 mermaid::parser::VariableType mermaid::parser::Lexer::consumeType()

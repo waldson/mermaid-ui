@@ -3,6 +3,7 @@
 
 #include <string>
 #include <optional>
+#include <unordered_map>
 
 namespace mermaid::parser {
 
@@ -31,6 +32,7 @@ class Variable
         mermaid::parser::VariableType type;
         std::string name;
         std::optional<std::string> defaultValue;
+        std::unordered_map<std::string, std::string> attributes;
         bool isArray;
 };
 
