@@ -41,6 +41,47 @@ RPG Session Manager. Programmer Style.
     - [ ] Add scitilla like code editor (https://www.scintilla.org/index.html)
 - [ ] ViewModel System (vue/react like with view files and code generation)
 - [ ] Box Model(Border, padding, margin)
+- [ ] View
+
+## Sample ViewModel File
+
+https://github.com/khlam/CS480-Translators/tree/master/3
+```
+#comments
+//comments
+/*
+Comments
+*/
+namespace fulano::beltrano; //optional namespace
+class Teste; //optional classname
+
+Name {
+    data {
+        int var = value;
+        float other = otherValue;
+        bool var = value;
+        string teste = "123";
+        string teste2 = '123';
+        char teste = 123;
+        unsigned teste; // no default value
+    }
+    props {
+        int a;
+        int b;
+        int c;
+    }
+    init {
+        
+    }
+    layout {
+        <View @click="clickMethod" :enabled="state.var == 0" ref="view">
+            <Child ref="child ${data.var}">
+                <Label text="Fazer ok ${data.teste}" @hover="changeData"/>
+            </Child>
+        </View>
+    }
+}
+```
 
 ## References & Utilities
 

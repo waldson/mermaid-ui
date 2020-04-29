@@ -1,7 +1,9 @@
 #include "mermaid/Application.h"
 #include "mermaid/Core.h"
+#include "mermaid/Event.h"
 #include "mermaid/Font.h"
 #include "mermaid/ResourceManager.h"
+#include "mermaid/components/Button.h"
 #include "mermaid/components/HBox.h"
 #include "mermaid/components/Label.h"
 #include "mermaid/components/VBox.h"
@@ -11,6 +13,7 @@
 #include <iostream>
 #include <memory>
 #include <string>
+#include <vector>
 
 int main(int argc, char* argv[])
 {
@@ -32,8 +35,8 @@ int main(int argc, char* argv[])
     view3->setBackground(0, 100, 200);
     view4->setBackground(100, 180, 20);
 
-    auto hbox = HBox::create();
-    auto vbox = VBox::create();
+    auto hbox = HBox::create(10);
+    auto vbox = VBox::create(10);
     hbox->addChild(view);
     hbox->addChild(view2);
 
@@ -55,7 +58,42 @@ int main(int argc, char* argv[])
     text->setPosition(20, 15);
     text->setColor(Color(150, 200, 200));
     text->setSize(100, 100);
+
+    unsigned clicks = 0;
+
+    std::vector<std::u8string> texts;
+    texts.push_back(u8"Frase 1");
+    texts.push_back(u8"Frase 2");
+    texts.push_back(u8"Teste 3");
+    texts.push_back(u8"Working 4");
+
+    view->on(u8"click", [&](Event& evt) {
+        text->setText(texts[clicks % texts.size()]);
+        clicks++;
+    });
+
+    auto lbl = u8"Clicks: ";
+    lbl += clicks;
     view->addChild(text);
+    text->setText(lbl);
+
+    auto button = Button::create(u8"Hide View", *font);
+
+    button->setSize(120, 50);
+    button->on(u8"action", [&](const Event& evt) {
+        view->toggleVisible();
+        if (view->isVisible()) {
+            button->setText(u8"Hide View");
+            /* view->hide(); */
+            button->setNormalColor(Color(50, 150, 50));
+        } else {
+            button->setText(u8"Show View");
+            /* view->show(); */
+            button->setNormalColor(Color(150, 50, 50));
+        }
+    });
+
+    vbox->addChild(button);
 
     /* app.setRootComponent(std::move(view)); */
     app.run();

@@ -1,12 +1,12 @@
 #include "mermaid/components/Widget.h"
 
 mermaid::components::Widget::Widget() :
-    size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true)
+    size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true), enabled(true)
 {
 }
 
 mermaid::components::Widget::Widget(std::shared_ptr<Widget> parent) :
-    size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true), parent(parent)
+    size(0, 0), position(0, 0), padding(), margin(), border(), options(), visible(true), parent(parent), enabled(true)
 {
 }
 
@@ -87,6 +87,26 @@ mermaid::Options& mermaid::components::Widget::getOptions()
     return options;
 }
 
+bool mermaid::components::Widget::isEnabled()
+{
+    return enabled;
+}
+
+void mermaid::components::Widget::setEnabled(bool enabled)
+{
+    this->enabled = enabled;
+}
+
+void mermaid::components::Widget::enable()
+{
+    setEnabled(true);
+}
+
+void mermaid::components::Widget::disable()
+{
+    setEnabled(false);
+}
+
 bool mermaid::components::Widget::isVisible()
 {
     return visible;
@@ -107,7 +127,12 @@ void mermaid::components::Widget::hide()
     this->setVisible(false);
 }
 
-void mermaid::components::Widget::toggleVisibility()
+void mermaid::components::Widget::toggleEnabled()
+{
+    this->setEnabled(!enabled);
+}
+
+void mermaid::components::Widget::toggleVisible()
 {
     this->setVisible(!visible);
 }
@@ -198,7 +223,14 @@ mermaid::Point mermaid::components::Widget::getParentPosition()
 
 void mermaid::components::Widget::update(Context& ctx)
 {
+    if (!isEnabled()) {
+        return;
+    }
+
     for (auto& child : children) {
+        if (!child->isEnabled()) {
+            continue;
+        }
         child->update(ctx);
     }
 }

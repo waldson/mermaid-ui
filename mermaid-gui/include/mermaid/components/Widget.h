@@ -22,8 +22,6 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     virtual void update(mermaid::Context& context);
     virtual Rect getDrawRect() override;
 
-    virtual bool isVisible() override;
-
     virtual ~Widget() = default;
 
     virtual mermaid::Size getSize();
@@ -39,10 +37,17 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     mermaid::Border& getBorder();
     mermaid::Options& getOptions();
 
+    virtual bool isVisible() override;
     virtual void setVisible(bool visible);
     virtual void show();
     virtual void hide();
-    virtual void toggleVisibility();
+    virtual void toggleVisible();
+
+    virtual bool isEnabled();
+    virtual void setEnabled(bool enabled);
+    virtual void enable();
+    virtual void disable();
+    virtual void toggleEnabled();
 
     virtual bool hasParent();
     virtual void setParent(std::shared_ptr<Widget> parent);
@@ -128,6 +133,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     mermaid::EventDispatcher dispatcher;
 
     bool visible;
+    bool enabled;
 
     std::weak_ptr<Widget> parent;
     std::vector<std::shared_ptr<mermaid::components::Widget>> children;

@@ -282,6 +282,10 @@ std::vector<mermaid::components::Widget*> mermaid::Application::raycast(mermaid:
 void mermaid::Application::doRaycast(mermaid::Point& point, mermaid::components::Widget& current,
                                      std::vector<mermaid::components::Widget*>& container)
 {
+    if (!current.isEnabled()) {
+        return;
+    }
+
     // children first to make it bubble instead of capturing
     for (auto& child : current.getChildren()) {
         doRaycast(point, *child, container);

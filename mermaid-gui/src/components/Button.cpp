@@ -17,6 +17,7 @@ mermaid::components::Button::Button(const std::u8string& text, mermaid::Font& fo
     currentColor = &normalColor;
     background->setBackground(*currentColor);
     background->addChild(this->text);
+    setEnabled(true);
 }
 
 std::shared_ptr<mermaid::components::Button> mermaid::components::Button::create(const std::u8string& text,

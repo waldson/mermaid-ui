@@ -9,9 +9,19 @@ INCLUDE_DIRECTORIES(
     include/
 )
 
+ADD_LIBRARY(MermaidParser STATIC 
+    # base
+    src/mermaid/parser/Error.cpp
+    src/mermaid/parser/Lexer.cpp
+    src/mermaid/parser/Location.cpp
+    src/mermaid/parser/Parser.cpp
+)
+
 ADD_EXECUTABLE(
     mm 
     src/main.cpp
-    src/Parser.cpp
 )
-#TARGET_LINK_LIBRARIES(mm ${FLEX_LIBRARIES})
+
+TARGET_LINK_LIBRARIES(mm MermaidParser)
+ENABLE_TESTING()
+ADD_SUBDIRECTORY(tests)
