@@ -86,21 +86,31 @@ std::string mermaid::parser::Lexer::consume(const std::string& text)
 mermaid::parser::VariableType mermaid::parser::Lexer::consumeType()
 {
     if (contains("int")) {
+        consume("int");
         return mermaid::parser::VariableType::Integer;
     } else if (contains("string")) {
+        consume("string");
         return mermaid::parser::VariableType::String;
     } else if (contains("unsigned")) {
+        consume("unsigned");
         return mermaid::parser::VariableType::Unsigned;
     } else if (contains("float")) {
+        consume("float");
         return mermaid::parser::VariableType::FloatPoint;
     } else if (contains("char")) {
+        consume("char");
         return mermaid::parser::VariableType::Character;
     } else if (contains("bool")) {
+        consume("bool");
         return mermaid::parser::VariableType::Boolean;
     } else {
-
-        throw mermaid::parser::Error(location, "Expected type, found " << charToString(peek()));
+        throw mermaid::parser::Error(
+            location,
+            "Expected type, found " + charToString(peek())
+        );
     }
+
+    return mermaid::parser::VariableType::Unknown;
 }
 
 bool mermaid::parser::Lexer::contains(const std::string& str)

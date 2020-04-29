@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-mermaid::parser::Parser::Parser(): dataVariables();
+mermaid::parser::Parser::Parser(): dataVariables()
 {
 }
 
@@ -24,7 +24,7 @@ void mermaid::parser::Parser::parse(const std::string& filename)
         std::ifstream file(filename);
 
         if (!file.good()) {
-            error("Error opening file: " + filename);
+            throw std::string("Error opening file: " + filename);
         }
 
         std::string line;
@@ -70,8 +70,8 @@ void mermaid::parser::Parser::parseData(mermaid::parser::Lexer& lexer)
     lexer.consumeWhitespaces();
     while (lexer.peek() != '}') {
         dataVariables.push_back(parseVariable(lexer));
+        lexer.consumeWhitespaces();
     }
-    lexer.consumeWhitespaces();
     lexer.consume("}");
 }
 
@@ -86,9 +86,9 @@ bool mermaid::parser::Parser::isType(mermaid::parser::Lexer& lexer)
 }
 
 
-std::string mermaid::parser::Parser::parseVariable(mermaid::parser::Lexer& lexer)
+mermaid::parser::Variable mermaid::parser::Parser::parseVariable(mermaid::parser::Lexer& lexer)
 {
-    auto type = parseType(lexer);
+    auto type = lexer.consumeType();
     lexer.consumeWhitespaces();
 
     auto isArray  = false;
@@ -103,21 +103,19 @@ std::string mermaid::parser::Parser::parseVariable(mermaid::parser::Lexer& lexer
     auto identifier = lexer.consumeIdentifier();
     lexer.consumeWhitespaces();
 
-    auto defaultValue = "";
+    std::string defaultValue;
     auto hasDefaultValue = false;
 
     if (lexer.peek() == '=') {
+        lexer.consume("=");
         hasDefaultValue = true;
         lexer.consumeWhitespaces();
 
-        defaultValue = lexer.consumeUntil("(\\s|;)");
-        lexer.consumeWhitespaces();
-
-        if (lexer.peek() == ';') {
-            lexer.consume(";");
-        }
-        lexer.consumeWhitespaces();
+        //TODO: validate type
+        defaultValue = lexer.consumeUntil(";");
     }
+    lexer.consume(";");
+    lexer.consumeWhitespaces();
 
     if (!hasDefaultValue) {
         auto v = mermaid::parser::Variable(type, identifier);
@@ -140,7 +138,6 @@ void mermaid::parser::Parser::parseClass(mermaid::parser::Lexer& lexer)
     lexer.consume("class");
     lexer.consumeWhitespaces();
     className = lexer.consumeIdentifier();
-    std::cout << "Class Name: " << className << std::endl;
     lexer.consumeWhitespaces();
     lexer.consume(";");
 }
@@ -150,7 +147,21 @@ void mermaid::parser::Parser::parseNamespace(mermaid::parser::Lexer& lexer)
     lexer.consume("namespace");
     lexer.consumeWhitespaces();
     ns = lexer.consumeIdentifier();
-    std::cout << "Namespace: " << ns << std::endl;
     lexer.consumeWhitespaces();
     lexer.consume(";");
+}
+
+std::vector<mermaid::parser::Variable>&  mermaid::parser::Parser::getDataVariables()
+{
+    return dataVariables;
+}
+
+std::string mermaid::parser::Parser::getClass()
+{
+    return className;
+}
+
+std::string mermaid::parser::Parser::getNamespace()
+{
+    return ns;
 }

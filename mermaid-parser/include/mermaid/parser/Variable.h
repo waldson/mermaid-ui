@@ -13,7 +13,8 @@ enum class VariableType
     FloatPoint,
     Unsigned,
     String,
-    Character
+    Character,
+    Unknown
 };
 
 class Variable 

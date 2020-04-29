@@ -16,6 +16,9 @@ class Parser
   public:
     Parser();
     void parse(const std::string& filename);
+    std::vector<mermaid::parser::Variable>&  getDataVariables();
+    std::string getClass();
+    std::string getNamespace();
 
   private:
     void doParse(mermaid::parser::Lexer& lexer);
@@ -25,7 +28,6 @@ class Parser
     mermaid::parser::Variable parseVariable(mermaid::parser::Lexer& lexer);
     void error(mermaid::parser::Location& location, const std::string& message);
     bool isType(mermaid::parser::Lexer& lexer);
-    mermaid-parser::include::mermaid::parser
     std::string className;
     std::string ns;
     std::vector<mermaid::parser::Variable> dataVariables;
