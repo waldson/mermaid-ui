@@ -72,12 +72,17 @@ std::string mermaid::parser::Lexer::consumeIdentifier()
 
 std::string mermaid::parser::Lexer::consume(const std::string& text)
 {
+
     for (const char& c : text) {
+        if (eof()) {
+            throw mermaid::parser::Error(location,
+                                        "Unexpected end of file. Expected: '" + text + "'");
+        }
         if (peek() == c) {
             advance();
         } else {
             throw mermaid::parser::Error(location,
-                                         "Unexpected char. Expected:" + charToString(c) + ", found: " + charToString(peek()));
+                                         "Unexpected char. Expected: '" + text + "', found: '" + charToString(peek()) + "'");
         }
     }
     return text;

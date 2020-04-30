@@ -184,8 +184,6 @@ std::unordered_map<std::string, std::string> mermaid::parser::Parser::parseDataA
             lexer.consumeWhitespaces();
             std::string value = lexer.consumeUntil("(,|\\))");
             attributes[name] = value;
-            std::cout << ">>>" << name << "=" << value << std::endl;
-            std::cout << attributes.size() << std::endl;
             if (lexer.contains(",")) {
                 lexer.consume(",");
             }
@@ -241,13 +239,106 @@ void mermaid::parser::Parser::parseLayout(mermaid::parser::Lexer& lexer)
     lexer.consumeWhitespaces();
     lexer.consume("{");
     lexer.consumeWhitespaces();
-    while (lexer.peek() != '}') {
 
-        /* dataVariables.push_back(parseVariable(lexer)); */
-        /* lexer.consumeWhitespaces(); */
+    rootTag = parseTag(lexer);
+    lexer.consumeWhitespaces();
+    lexer.consume("}");
+}
+
+mermaid::parser::Tag mermaid::parser::Parser::parseTag(mermaid::parser::Lexer& lexer)
+{
+    lexer.consumeWhitespaces();
+    lexer.consume("<");
+
+    mermaid::parser::Tag tag;
+    tag.name = lexer.consumeIdentifier();
+
+    lexer.consumeWhitespaces();
+
+    std::cout << "Parsing TAG: " << tag.name << std::endl;
+    tag.attributes = parseTagAttributes(lexer);
+
+    if (lexer.contains(">")) {
+        lexer.consume(">");
+        lexer.consumeWhitespaces();
+        while (lexer.contains("<") && !lexer.contains("</")) {
+            tag.children.push_back(parseTag(lexer));
+        }
+        lexer.consumeWhitespaces();
+    } else if (lexer.contains("/>")) {
+        lexer.consume("/>");
+        lexer.consumeWhitespaces();
+        return tag;
+    }
+
+    lexer.consume("</");
+    lexer.consume(tag.name);
+    lexer.consumeWhitespaces();
+    lexer.consume(">");
+
+    return tag;
+}
+
+std::vector<mermaid::parser::Attribute>  mermaid::parser::Parser::parseTagAttributes(mermaid::parser::Lexer& lexer)
+{
+    std::vector<mermaid::parser::Attribute> attributes;
+
+
+    while (!lexer.contains(">") && !lexer.contains("/>")) {
+        lexer.consumeWhitespaces();
+        attributes.push_back(parseTagAttribute(lexer));
+        lexer.consumeWhitespaces();
+    }
+    lexer.consumeWhitespaces();
+
+    return attributes;
+}
+
+mermaid::parser::Attribute mermaid::parser::Parser::parseTagAttribute(mermaid::parser::Lexer& lexer)
+{
+    lexer.consumeWhitespaces();
+    mermaid::parser::Attribute attr;
+
+    if (lexer.contains(":")) {
+        lexer.consume(":");
+        attr.type = mermaid::parser::AttributeType::Bind;
+        attr.name = lexer.consumeIdentifier();
+    } else if (lexer.contains("@")) {
+        lexer.consume("@");
+        attr.type = mermaid::parser::AttributeType::Callback;
+        attr.name = lexer.consumeIdentifier();
+    } else if (lexer.contains("mm-")) {
+        lexer.consume("mm-");
+        attr.type = mermaid::parser::AttributeType::Directive;
+        attr.name = lexer.consumeIdentifier();
+    } else {
+        attr.type = mermaid::parser::AttributeType::Fixed;
+        attr.name = lexer.consumeIdentifier();
+    }
+    lexer.consume("=");
+    attr.value = parseAttrValue(lexer);
+
+    std::cout << "Attr: " << attr.name << "=" << attr.value << std::endl;
+
+    return attr;
+}
+
+std::string mermaid::parser::Parser::parseAttrValue(mermaid::parser::Lexer& lexer)
+{
+    std::stringstream ss;
+    lexer.consume("\"");
+
+    while (!lexer.contains("\"")) {
+        ss << lexer.peek();
+        if (lexer.contains("\\\"")) {
+            ss << lexer.consume("\\\"");
+        }
         lexer.advance();
     }
-    lexer.consume("}");
+    lexer.consume("\"");
+    lexer.consumeWhitespaces();
+
+    return ss.str();
 }
 
 std::vector<mermaid::parser::Variable>&  mermaid::parser::Parser::getDataVariables()
