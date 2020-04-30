@@ -51,7 +51,7 @@ int main(int argc, char* argv[])
 
     std::unique_ptr<ResourceManager<Font, std::string>> manager(new ResourceManager<Font, std::string>());
 
-    auto font = manager->load("defaultFont", "/home/waldson/.local/share/fonts/Hack Regular Nerd Font Complete.ttf", 18)
+    auto font = manager->load("defaultFont", "/home/waldson/.local/share/fonts/Hack Regular Nerd Font Complete.ttf", 14)
                     .value();
     const std::string label = "Waldson Patrício";
     auto text = Label::create(label, *font);
@@ -80,6 +80,7 @@ int main(int argc, char* argv[])
     auto button = Button::create("Hide View", *font);
 
     button->setSize(120, 50);
+
     button->on("action", [&](const Event& evt) {
         view->toggleVisible();
         if (view->isVisible()) {
@@ -95,7 +96,7 @@ int main(int argc, char* argv[])
 
     auto input = TextInput::create(*font);
     input->setValue("Input");
-    input->setSize(300, 80);
+    input->setSize(600, 30);
 
     vbox->addChild(button);
     vbox->addChild(input);

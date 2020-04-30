@@ -27,6 +27,7 @@ class View : public Widget
 
   protected:
     View(int x, int y, int width, int height);
+    View();
 
   private:
     mermaid::Color backgroundColor;

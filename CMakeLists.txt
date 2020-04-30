@@ -41,6 +41,7 @@ ADD_LIBRARY(MermaidGui STATIC
 
     # components
     mermaid-gui/src/mermaid/components/Button.cpp
+    mermaid-gui/src/mermaid/components/Cursor.cpp
     mermaid-gui/src/mermaid/components/HBox.cpp
     mermaid-gui/src/mermaid/components/Label.cpp
     mermaid-gui/src/mermaid/components/TextInput.cpp
