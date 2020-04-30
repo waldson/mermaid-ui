@@ -5,23 +5,26 @@
 
 namespace mermaid::parser {
 
-enum class AttributeType {
+enum class AttributeType
+{
     Bind,
     Callback,
     Directive,
     Fixed
 };
 
-class Attribute {
+class Attribute
+{
 
-    public:
-        Attribute()
-        {}
+  public:
+    Attribute()
+    {
+    }
 
-        mermaid::parser::AttributeType type;
-        std::string name;
-        std::string value;
+    mermaid::parser::AttributeType type;
+    std::string name;
+    std::string value;
 };
 
-} //namespace mermaid
+} // namespace mermaid::parser
 #endif

@@ -1,15 +1,15 @@
 #ifndef MERMAID_PARSER_H
 #define MERMAID_PARSER_H
 
-#include "mermaid/parser/Lexer.h"
-#include "mermaid/parser/Variable.h"
 #include "mermaid/parser/Attribute.h"
+#include "mermaid/parser/Lexer.h"
 #include "mermaid/parser/Tag.h"
+#include "mermaid/parser/Variable.h"
 
 #include <istream>
 #include <string>
-#include <vector>
 #include <unordered_map>
+#include <vector>
 
 namespace mermaid::parser {
 
@@ -20,8 +20,8 @@ class Parser
     Parser();
     void parse(const std::string& filename);
     void parseFromString(const std::string& contents);
-    std::vector<mermaid::parser::Variable>&  getDataVariables();
-    std::vector<mermaid::parser::Variable>&  getProps();
+    std::vector<mermaid::parser::Variable>& getDataVariables();
+    std::vector<mermaid::parser::Variable>& getProps();
     std::string getClass();
     std::string getNamespace();
 

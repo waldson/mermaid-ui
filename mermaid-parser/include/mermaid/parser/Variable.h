@@ -1,13 +1,13 @@
 #ifndef MERMAID_VARIABLE_H
 #define MERMAID_VARIABLE_H
 
-#include <string>
 #include <optional>
+#include <string>
 #include <unordered_map>
 
 namespace mermaid::parser {
 
-enum class VariableType 
+enum class VariableType
 {
     Integer,
     Boolean,
@@ -18,23 +18,25 @@ enum class VariableType
     Unknown
 };
 
-class Variable 
+class Variable
 {
-    public:
-        Variable(mermaid::parser::VariableType type, std::string name, std::string defaultValue):
-            type(type), name(name), defaultValue(defaultValue), isArray(false)
-    {}
+  public:
+    Variable(mermaid::parser::VariableType type, std::string name, std::string defaultValue) :
+        type(type), name(name), defaultValue(defaultValue), isArray(false)
+    {
+    }
 
-        Variable(mermaid::parser::VariableType type, std::string name):
-            type(type), name(name), defaultValue(std::nullopt), isArray(false)
-    {}
+    Variable(mermaid::parser::VariableType type, std::string name) :
+        type(type), name(name), defaultValue(std::nullopt), isArray(false)
+    {
+    }
 
-        mermaid::parser::VariableType type;
-        std::string name;
-        std::optional<std::string> defaultValue;
-        std::unordered_map<std::string, std::string> attributes;
-        bool isArray;
+    mermaid::parser::VariableType type;
+    std::string name;
+    std::optional<std::string> defaultValue;
+    std::unordered_map<std::string, std::string> attributes;
+    bool isArray;
 };
 
-} //namespace mermaid
+} // namespace mermaid::parser
 #endif

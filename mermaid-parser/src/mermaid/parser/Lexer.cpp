@@ -33,7 +33,6 @@ std::string mermaid::parser::Lexer::consumeUntil(const std::string& regex)
     std::stringstream ss;
     std::regex rg(regex, std::regex_constants::ECMAScript);
 
-
     while (!eof()) {
         auto c = peek();
         if (std::regex_match(charToString(c), rg)) {
@@ -50,7 +49,6 @@ std::string mermaid::parser::Lexer::consumeWhile(const std::string& regex)
 {
     std::stringstream ss;
     std::regex rg(regex, std::regex_constants::ECMAScript);
-
 
     while (!eof()) {
         auto c = peek();
@@ -74,14 +72,13 @@ std::string mermaid::parser::Lexer::consume(const std::string& text)
 {
     for (const char& c : text) {
         if (eof()) {
-            throw mermaid::parser::Error(location,
-                                        "Unexpected end of file. Expected: '" + text + "'");
+            throw mermaid::parser::Error(location, "Unexpected end of file. Expected: '" + text + "'");
         }
         if (peek() == c) {
             advance();
         } else {
-            throw mermaid::parser::Error(location,
-                                         "Unexpected char. Expected: '" + text + "', found: '" + charToString(peek()) + "'");
+            throw mermaid::parser::Error(location, "Unexpected char. Expected: '" + text + "', found: '" +
+                                                       charToString(peek()) + "'");
         }
     }
     return text;
@@ -108,10 +105,7 @@ mermaid::parser::VariableType mermaid::parser::Lexer::consumeType()
         consume("bool");
         return mermaid::parser::VariableType::Boolean;
     } else {
-        throw mermaid::parser::Error(
-            location,
-            "Expected type, found " + charToString(peek())
-        );
+        throw mermaid::parser::Error(location, "Expected type, found " + charToString(peek()));
     }
 
     return mermaid::parser::VariableType::Unknown;

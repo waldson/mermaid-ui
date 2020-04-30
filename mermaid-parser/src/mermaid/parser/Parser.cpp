@@ -1,14 +1,14 @@
 #include "mermaid/parser/Parser.h"
 
-#include "mermaid/parser/Lexer.h"
 #include "mermaid/parser/Error.h"
+#include "mermaid/parser/Lexer.h"
 
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
-#include <filesystem>
 
-mermaid::parser::Parser::Parser(): dataVariables()
+mermaid::parser::Parser::Parser() : dataVariables()
 {
 }
 
@@ -63,6 +63,11 @@ void mermaid::parser::Parser::parseFromString(const std::string& contents)
     mermaid::parser::Location location("");
     mermaid::parser::Lexer lexer(location, contents);
 
+    lexer.consumeWhitespaces();
+    if (lexer.eof()) {
+        error(location, "Empty file");
+    }
+
     while (!lexer.eof()) {
         lexer.consumeWhitespaces();
         doParse(lexer);
@@ -92,7 +97,7 @@ void mermaid::parser::Parser::doParse(mermaid::parser::Lexer& lexer)
     } else if (lexer.contains("layout")) {
         parseLayout(lexer);
     } else {
-        lexer.advance();
+        error(lexer.getLocation(), "Unexpected character");
     }
 }
 
@@ -111,8 +116,8 @@ void mermaid::parser::Parser::parseData(mermaid::parser::Lexer& lexer)
 
 void mermaid::parser::Parser::parseProps(mermaid::parser::Lexer& lexer)
 {
-    //same as data
-    //TODO: avoid code repetition
+    // same as data
+    // TODO: avoid code repetition
     lexer.consume("props");
     lexer.consumeWhitespaces();
     lexer.consume("{");
@@ -126,21 +131,16 @@ void mermaid::parser::Parser::parseProps(mermaid::parser::Lexer& lexer)
 
 bool mermaid::parser::Parser::isType(mermaid::parser::Lexer& lexer)
 {
-    return lexer.contains("int") 
-        || lexer.contains("string")
-        || lexer.contains("float")
-        || lexer.contains("char")
-        || lexer.contains("unsigned")
-        || lexer.contains("bool");
+    return lexer.contains("int") || lexer.contains("string") || lexer.contains("float") || lexer.contains("char") ||
+           lexer.contains("unsigned") || lexer.contains("bool");
 }
-
 
 mermaid::parser::Variable mermaid::parser::Parser::parseVariable(mermaid::parser::Lexer& lexer)
 {
     auto type = lexer.consumeType();
     lexer.consumeWhitespaces();
 
-    auto isArray  = false;
+    auto isArray = false;
     std::unordered_map<std::string, std::string> attrs;
 
     if (lexer.peek() == '(') {
@@ -175,7 +175,7 @@ mermaid::parser::Variable mermaid::parser::Parser::parseVariable(mermaid::parser
         hasDefaultValue = true;
         lexer.consumeWhitespaces();
 
-        //TODO: validate type
+        // TODO: validate type
         defaultValue = lexer.consumeUntil(";");
     }
 
@@ -187,7 +187,7 @@ mermaid::parser::Variable mermaid::parser::Parser::parseVariable(mermaid::parser
         v.attributes = attrs;
         v.isArray = isArray;
         return v;
-    } 
+    }
 
     auto v = mermaid::parser::Variable(type, identifier, defaultValue);
     v.isArray = isArray;
@@ -223,7 +223,6 @@ std::unordered_map<std::string, std::string> mermaid::parser::Parser::parseDataA
     return attributes;
 }
 
-
 void mermaid::parser::Parser::error(mermaid::parser::Location& location, const std::string& message)
 {
     throw mermaid::parser::Error(location, message);
@@ -255,7 +254,6 @@ void mermaid::parser::Parser::parseNamespace(mermaid::parser::Lexer& lexer)
     lexer.consume(";");
     ns = ss.str();
 }
-
 
 void mermaid::parser::Parser::parseLayout(mermaid::parser::Lexer& lexer)
 {
@@ -302,10 +300,9 @@ mermaid::parser::Tag mermaid::parser::Parser::parseTag(mermaid::parser::Lexer& l
     return tag;
 }
 
-std::vector<mermaid::parser::Attribute>  mermaid::parser::Parser::parseTagAttributes(mermaid::parser::Lexer& lexer)
+std::vector<mermaid::parser::Attribute> mermaid::parser::Parser::parseTagAttributes(mermaid::parser::Lexer& lexer)
 {
     std::vector<mermaid::parser::Attribute> attributes;
-
 
     while (!lexer.contains(">") && !lexer.contains("/>")) {
         lexer.consumeWhitespaces();
@@ -362,12 +359,12 @@ std::string mermaid::parser::Parser::parseAttrValue(mermaid::parser::Lexer& lexe
     return ss.str();
 }
 
-std::vector<mermaid::parser::Variable>&  mermaid::parser::Parser::getDataVariables()
+std::vector<mermaid::parser::Variable>& mermaid::parser::Parser::getDataVariables()
 {
     return dataVariables;
 }
 
-std::vector<mermaid::parser::Variable>&  mermaid::parser::Parser::getProps()
+std::vector<mermaid::parser::Variable>& mermaid::parser::Parser::getProps()
 {
     return props;
 }

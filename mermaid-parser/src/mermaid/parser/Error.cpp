@@ -1,7 +1,6 @@
 #include "mermaid/parser/Error.h"
 
-mermaid::parser::Error::Error(mermaid::parser::Location location, std::string error) :
-    location(location), error(error)
+mermaid::parser::Error::Error(mermaid::parser::Location location, std::string error) : location(location), error(error)
 {
 }
 std::string mermaid::parser::Error::getMessage()
