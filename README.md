@@ -1,4 +1,4 @@
-# Mermaid RPG
+# Mermaid UI
 
 Fast UI Framework for desktop platforms with the easiness of web MVVM frameworks.
 
@@ -6,8 +6,8 @@ Fast UI Framework for desktop platforms with the easiness of web MVVM frameworks
 ## TO-DO
 
 - [X] Managed Font, Renderer and Window
-- [-] Application
-- [.] Event system
+- [ ] Application
+- [ ] Event system
     - [X] Mouse Enter
     - [X] Mouse Leave
     - [X] Mouse Move
@@ -25,12 +25,12 @@ Fast UI Framework for desktop platforms with the easiness of web MVVM frameworks
     - [ ] Window Resize
     - [ ] Focus in
     - [ ] Focus out
-- [.] Widget System
+- [ ] Widget System
     - [X] View
     - [X] Label
     - [X] HBox
     - [X] VBox
-    - [.] Button
+    - [ ] Button
         - [X] Implementation
         - [ ] Make it work when mouse leaves and comes back with button down
         - [ ] WindowLeave return it to its default state
@@ -42,5 +42,6 @@ Fast UI Framework for desktop platforms with the easiness of web MVVM frameworks
     - [ ] Add scintilla like code editor (https://www.scintilla.org/index.html)
 - [ ] Box Model(Border, padding, margin)
 - [ ] ViewModel System (vue/react like with view files and code generation)
-- [X] Custom File Parser
-- [.] Code Generator
+    - [X] Custom File Parser
+    - [ ] Code Generator
+    - [ ] Base Widget class
