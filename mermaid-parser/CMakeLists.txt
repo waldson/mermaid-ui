@@ -15,6 +15,7 @@ ADD_LIBRARY(MermaidParser STATIC
     src/mermaid/parser/Lexer.cpp
     src/mermaid/parser/Location.cpp
     src/mermaid/parser/Parser.cpp
+    src/mermaid/parser/CodeGenerator.cpp
 )
 
 ADD_EXECUTABLE(

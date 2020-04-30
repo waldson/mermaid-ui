@@ -61,6 +61,8 @@ int main(int argc, char* argv[])
             << error.getLocation().getColumn() <<  " "
             << error.getMessage() << std::endl;
         return -11;
+    } catch (std::string& error) {
+        std::cout << error << std::endl;
     }
 
     return 0;

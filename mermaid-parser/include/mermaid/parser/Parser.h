@@ -19,6 +19,7 @@ class Parser
   public:
     Parser();
     void parse(const std::string& filename);
+    void parseFromString(const std::string& contents);
     std::vector<mermaid::parser::Variable>&  getDataVariables();
     std::vector<mermaid::parser::Variable>&  getProps();
     std::string getClass();

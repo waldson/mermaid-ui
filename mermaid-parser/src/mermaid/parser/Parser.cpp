@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
+#include <filesystem>
 
 mermaid::parser::Parser::Parser(): dataVariables()
 {
@@ -13,6 +14,11 @@ mermaid::parser::Parser::Parser(): dataVariables()
 
 void mermaid::parser::Parser::parse(const std::string& filename)
 {
+
+    if (!std::filesystem::exists(std::filesystem::path(filename))) {
+        throw std::string("File does not exists: " + filename);
+    }
+
     std::stringstream ss;
     if (filename == "-") {
         std::string line;
@@ -23,7 +29,7 @@ void mermaid::parser::Parser::parse(const std::string& filename)
     } else {
         std::ifstream file(filename);
 
-        if (!file.good()) {
+        if (!file.good() || !file.is_open()) {
             throw std::string("Error opening file: " + filename);
         }
 
@@ -47,6 +53,21 @@ void mermaid::parser::Parser::parse(const std::string& filename)
         lexer.consumeWhitespaces();
         doParse(lexer);
     }
+    if (className == "") {
+        error(location, "Class name must be defined. Missing 'class <name>;'");
+    }
+}
+
+void mermaid::parser::Parser::parseFromString(const std::string& contents)
+{
+    mermaid::parser::Location location("");
+    mermaid::parser::Lexer lexer(location, contents);
+
+    while (!lexer.eof()) {
+        lexer.consumeWhitespaces();
+        doParse(lexer);
+    }
+
     if (className == "") {
         error(location, "Class name must be defined. Missing 'class <name>;'");
     }
