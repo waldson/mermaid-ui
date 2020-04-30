@@ -1,9 +1,9 @@
-
 # Mermaid RPG
 
-RPG Session Manager. Programmer Style.
+Fast UI Framework for desktop platforms with the easiness of web MVVM frameworks.
 
-## Tasks
+
+## TO-DO
 
 - [X] Managed Font, Renderer and Window
 - [-] Application
@@ -22,7 +22,7 @@ RPG Session Manager. Programmer Style.
     - [ ] Window Enter
     - [ ] Window Leave
     - [ ] Window Move
-    - [ ] Window Re size
+    - [ ] Window Resize
     - [ ] Focus in
     - [ ] Focus out
 - [.] Widget System
@@ -30,62 +30,17 @@ RPG Session Manager. Programmer Style.
     - [X] Label
     - [X] HBox
     - [X] VBox
-    - [ ] Button
+    - [.] Button
+        - [X] Implementation
         - [ ] Make it work when mouse leaves and comes back with button down
-        - [ ] WindowLeave return it to default state
+        - [ ] WindowLeave return it to its default state
     - [ ] Image
     - [ ] TextInput
     - [ ] Checkbox
     - [ ] SelectBox
     - [ ] Radio
-    - [ ] Add scitilla like code editor (https://www.scintilla.org/index.html)
-- [ ] ViewModel System (vue/react like with view files and code generation)
+    - [ ] Add scintilla like code editor (https://www.scintilla.org/index.html)
 - [ ] Box Model(Border, padding, margin)
-- [ ] View
-
-## Sample ViewModel File
-
-https://github.com/khlam/CS480-Translators/tree/master/3
-```
-#comments
-//comments
-/*
-Comments
-*/
-namespace fulano::beltrano; //optional namespace
-class Teste; //optional classname
-
-Name {
-    data {
-        int var = value;
-        float other = otherValue;
-        bool var = value;
-        string teste = "123";
-        string teste2 = '123';
-        char teste = 123;
-        unsigned teste; // no default value
-    }
-    props {
-        int a;
-        int b;
-        int c;
-    }
-    init {
-        
-    }
-    layout {
-        <View @click="clickMethod" :enabled="state.var == 0" ref="view">
-            <Child ref="child ${data.var}">
-                <Label text="Fazer ok ${data.teste}" @hover="changeData"/>
-            </Child>
-        </View>
-    }
-}
-```
-
-## References & Utilities
-- Maybe rename to siren
-- SFGUI: https://github.com/TankOs/SFGUI/tree/master/src/SFGUI
-- http://utfcpp.sourceforge.net/
-- https://kivy.org/#home
-- GUI Style: https://odiogosilva.github.io/TriFusion/
+- [ ] ViewModel System (vue/react like with view files and code generation)
+- [X] Custom File Parser
+- [.] Code Generator
