@@ -47,6 +47,9 @@ void mermaid::parser::Parser::parse(const std::string& filename)
         lexer.consumeWhitespaces();
         doParse(lexer);
     }
+    if (className == "") {
+        error(location, "Class name must be defined. Missing 'class <name>;'");
+    }
 }
 
 void mermaid::parser::Parser::doParse(mermaid::parser::Lexer& lexer)
@@ -255,7 +258,6 @@ mermaid::parser::Tag mermaid::parser::Parser::parseTag(mermaid::parser::Lexer& l
 
     lexer.consumeWhitespaces();
 
-    std::cout << "Parsing TAG: " << tag.name << std::endl;
     tag.attributes = parseTagAttributes(lexer);
 
     if (lexer.contains(">")) {
@@ -317,8 +319,6 @@ mermaid::parser::Attribute mermaid::parser::Parser::parseTagAttribute(mermaid::p
     }
     lexer.consume("=");
     attr.value = parseAttrValue(lexer);
-
-    std::cout << "Attr: " << attr.name << "=" << attr.value << std::endl;
 
     return attr;
 }

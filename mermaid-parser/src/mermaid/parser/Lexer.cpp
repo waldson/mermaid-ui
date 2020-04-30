@@ -72,7 +72,6 @@ std::string mermaid::parser::Lexer::consumeIdentifier()
 
 std::string mermaid::parser::Lexer::consume(const std::string& text)
 {
-
     for (const char& c : text) {
         if (eof()) {
             throw mermaid::parser::Error(location,
