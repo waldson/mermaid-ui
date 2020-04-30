@@ -40,6 +40,7 @@ RPG Session Manager. Programmer Style.
     - [ ] SelectBox
     - [ ] Radio
     - [ ] Add scintilla like code editor (https://www.scintilla.org/index.html)
+    - [ ] Min size and Max Size
 - [ ] ViewModel System (vue/react like with view files and code generation)
 - [ ] Box Model(Border, padding, margin)
 - [ ] View
