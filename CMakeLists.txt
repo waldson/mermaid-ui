@@ -31,22 +31,22 @@ SET(LIBS ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})
 
 ADD_LIBRARY(MermaidGui STATIC 
     # base
-    mermaid-gui/src/Application.cpp
-    mermaid-gui/src/Event.cpp
-    mermaid-gui/src/EventDispatcher.cpp
-    mermaid-gui/src/Font.cpp
-    mermaid-gui/src/SdlContext.cpp
-    mermaid-gui/src/SdlRenderer.cpp
-    mermaid-gui/src/SdlWindow.cpp
-    mermaid-gui/src/helpers/string_helper.cpp
+    mermaid-gui/src/mermaid/Application.cpp
+    mermaid-gui/src/mermaid/Event.cpp
+    mermaid-gui/src/mermaid/EventDispatcher.cpp
+    mermaid-gui/src/mermaid/Font.cpp
+    mermaid-gui/src/mermaid/SdlContext.cpp
+    mermaid-gui/src/mermaid/SdlRenderer.cpp
+    mermaid-gui/src/mermaid/SdlWindow.cpp
 
     # components
-    mermaid-gui/src/components/Button.cpp
-    mermaid-gui/src/components/HBox.cpp
-    mermaid-gui/src/components/Label.cpp
-    mermaid-gui/src/components/VBox.cpp
-    mermaid-gui/src/components/View.cpp
-    mermaid-gui/src/components/Widget.cpp
+    mermaid-gui/src/mermaid/components/Button.cpp
+    mermaid-gui/src/mermaid/components/HBox.cpp
+    mermaid-gui/src/mermaid/components/Label.cpp
+    mermaid-gui/src/mermaid/components/TextInput.cpp
+    mermaid-gui/src/mermaid/components/VBox.cpp
+    mermaid-gui/src/mermaid/components/View.cpp
+    mermaid-gui/src/mermaid/components/Widget.cpp
 )
 TARGET_LINK_LIBRARIES(MermaidGui ${LIBS})
 
@@ -54,5 +54,6 @@ ADD_EXECUTABLE(mermaid-rpg
     src/main.cpp
 )
 TARGET_LINK_LIBRARIES(mermaid-rpg ${LIBS} MermaidGui)
+
 ENABLE_TESTING()
 ADD_SUBDIRECTORY(tests)

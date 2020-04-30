@@ -6,6 +6,7 @@
 #include "mermaid/components/Button.h"
 #include "mermaid/components/HBox.h"
 #include "mermaid/components/Label.h"
+#include "mermaid/components/TextInput.h"
 #include "mermaid/components/VBox.h"
 #include "mermaid/components/View.h"
 
@@ -22,7 +23,7 @@ int main(int argc, char* argv[])
 
     auto a = SdlContext::create();
     auto window =
-        a->createWindow(u8"Teste", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+        a->createWindow("Teste", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
 
     Application app(*window);
     auto view = View::create(0, 0, 450, 50);
@@ -46,14 +47,13 @@ int main(int argc, char* argv[])
 
     app.setRootComponent(vbox);
 
-    /* text->setText(u8"OK"); */
+    /* text->setText("OK"); */
 
-    std::unique_ptr<ResourceManager<Font, std::u8string>> manager(new ResourceManager<Font, std::u8string>());
+    std::unique_ptr<ResourceManager<Font, std::string>> manager(new ResourceManager<Font, std::string>());
 
-    auto font =
-        manager->load(u8"defaultFont", u8"/home/waldson/.local/share/fonts/Hack Regular Nerd Font Complete.ttf", 18)
-            .value();
-    const std::u8string label = u8"Waldson Patrício";
+    auto font = manager->load("defaultFont", "/home/waldson/.local/share/fonts/Hack Regular Nerd Font Complete.ttf", 18)
+                    .value();
+    const std::string label = "Waldson Patrício";
     auto text = Label::create(label, *font);
     text->setPosition(20, 15);
     text->setColor(Color(150, 200, 200));
@@ -61,39 +61,44 @@ int main(int argc, char* argv[])
 
     unsigned clicks = 0;
 
-    std::vector<std::u8string> texts;
-    texts.push_back(u8"Frase 1");
-    texts.push_back(u8"Frase 2");
-    texts.push_back(u8"Teste 3");
-    texts.push_back(u8"Working 4");
+    std::vector<std::string> texts;
+    texts.push_back("Frase 1");
+    texts.push_back("Frase 2");
+    texts.push_back("Teste 3");
+    texts.push_back("Working 4");
 
-    view->on(u8"click", [&](Event& evt) {
+    view->on("click", [&](Event& evt) {
         text->setText(texts[clicks % texts.size()]);
         clicks++;
     });
 
-    auto lbl = u8"Clicks: ";
+    auto lbl = "Clicks: ";
     lbl += clicks;
     view->addChild(text);
     text->setText(lbl);
 
-    auto button = Button::create(u8"Hide View", *font);
+    auto button = Button::create("Hide View", *font);
 
     button->setSize(120, 50);
-    button->on(u8"action", [&](const Event& evt) {
+    button->on("action", [&](const Event& evt) {
         view->toggleVisible();
         if (view->isVisible()) {
-            button->setText(u8"Hide View");
+            button->setText("Hide View");
             /* view->hide(); */
             button->setNormalColor(Color(50, 150, 50));
         } else {
-            button->setText(u8"Show View");
+            button->setText("Show View");
             /* view->show(); */
             button->setNormalColor(Color(150, 50, 50));
         }
     });
 
+    auto input = TextInput::create(*font);
+    input->setValue("Input");
+    input->setSize(300, 80);
+
     vbox->addChild(button);
+    vbox->addChild(input);
 
     /* app.setRootComponent(std::move(view)); */
     app.run();

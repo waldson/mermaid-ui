@@ -38,6 +38,9 @@ class Application
     void handleMouseMotionEvents(SDL_Event& evt, mermaid::Context& ctx);
     void handleMouseButtonDownEvents(SDL_Event& evt, mermaid::Context& ctx);
     void handleMouseButtonUpEvents(SDL_Event& evt, mermaid::Context& ctx);
+    void handleKeyDownEvent(SDL_Event& evt, mermaid::Context& ctx);
+    void handleKeyUpEvent(SDL_Event& evt, mermaid::Context& ctx);
+    void handleTextInputEvent(SDL_Event& evt, mermaid::Context& ctx);
 
     std::vector<mermaid::components::Widget*> included(std::vector<mermaid::components::Widget*> previous,
                                                        std::vector<mermaid::components::Widget*> current);

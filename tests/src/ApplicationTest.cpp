@@ -10,7 +10,7 @@
 
 TEST_CASE("Application raycasts through widgets", "[Application]")
 {
-    auto window = mermaid::SdlWindow::create(u8"title", 0, 0, 1000, 1000, SDL_WINDOW_HIDDEN);
+    auto window = mermaid::SdlWindow::create("title", 0, 0, 1000, 1000, SDL_WINDOW_HIDDEN);
     mermaid::Application app(*window);
 
     auto root = mermaid::components::View::create(100, 100);

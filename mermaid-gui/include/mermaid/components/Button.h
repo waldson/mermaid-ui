@@ -17,13 +17,13 @@ class Button : public Widget
 {
 
   public:
-    static std::shared_ptr<mermaid::components::Button> create(const std::u8string& text, mermaid::Font& font);
+    static std::shared_ptr<mermaid::components::Button> create(const std::string& text, mermaid::Font& font);
 
     void draw(Context& ctx) override;
     void update(Context& ctx) override;
 
-    void setText(const std::u8string& text);
-    std::u8string getText();
+    void setText(const std::string& text);
+    std::string getText();
 
     mermaid::Color getNormalColor();
     void setNormalColor(mermaid::Color normalColor);
@@ -55,7 +55,7 @@ class Button : public Widget
     void setPosition(mermaid::Point p) override;
 
   private:
-    Button(const std::u8string& text, mermaid::Font& font);
+    Button(const std::string& text, mermaid::Font& font);
     mermaid::Color normalColor;
     mermaid::Color activeColor;
     mermaid::Color disabledColor;

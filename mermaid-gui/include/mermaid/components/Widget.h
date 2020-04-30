@@ -62,60 +62,114 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     std::vector<std::shared_ptr<mermaid::components::Widget>>& getChildren();
 
     template <typename T>
-    std::optional<T> getOption(std::u8string key)
+    std::optional<T> getOption(std::string key)
     {
         return options.get<T>(key);
     }
 
     template <typename T>
-    std::optional<T> setOption(std::u8string key, T value)
+    std::optional<T> setOption(std::string key, T value)
     {
         return options.set(key, value);
     }
 
-    void unsetOption(std::u8string key);
-    bool hasOption(std::u8string key);
-    void setOption(std::u8string key);
+    void unsetOption(std::string key);
+    bool hasOption(std::string key);
+    void setOption(std::string key);
 
-    void on(const std::u8string& name, mermaid::EventDispatcher::CallbackType callback);
-    void off(const std::u8string& name);
-    void emit(const std::u8string& name);
-    void emit(const std::u8string& name, mermaid::Event& evt);
+    void on(const std::string& name, mermaid::EventDispatcher::CallbackType callback);
+    void off(const std::string& name);
+    void emit(const std::string& name);
+    void emit(const std::string& name, mermaid::Event& evt);
 
-    inline virtual void onMouseEnter(mermaid::Event&)
+    inline virtual void onMouseEnter(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onMouseEnter(evt);
+        }
     }
 
-    inline virtual void onMouseLeave(mermaid::Event&)
+    inline virtual void onMouseLeave(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onMouseLeave(evt);
+        }
     }
 
-    inline virtual void onMouseMove(mermaid::Event&)
+    inline virtual void onMouseMove(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onMouseMove(evt);
+        }
     }
 
-    inline virtual void onMouseDown(mermaid::Event&)
+    inline virtual void onMouseDown(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onMouseDown(evt);
+        }
     }
 
-    inline virtual void onMouseUp(mermaid::Event&)
+    inline virtual void onMouseUp(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onMouseUp(evt);
+        }
     }
 
-    inline virtual void onClick(mermaid::Event&)
+    inline virtual void onClick(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onClick(evt);
+        }
     }
 
-    inline virtual void onKeyUp(mermaid::Event&)
+    inline virtual void onKeyUp(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onKeyUp(evt);
+        }
     }
 
-    inline virtual void onKeyDown(mermaid::Event&)
+    inline virtual void onKeyDown(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onKeyDown(evt);
+        }
     }
 
-    inline virtual void onTextInput(mermaid::Event&)
+    inline virtual void onTextInput(mermaid::Event& evt)
     {
+        for (auto& w : getChildren()) {
+            if (evt.isCanceled()) {
+                break;
+            }
+            w->onTextInput(evt);
+        }
     }
 
   protected:

@@ -15,13 +15,13 @@ class EventDispatcher
   public:
     using CallbackType = std::function<void(mermaid::Event&)>;
     EventDispatcher() = default;
-    void on(const std::u8string& name, CallbackType callback);
-    void off(const std::u8string& name);
-    void emit(const std::u8string& name, mermaid::Event& event);
-    void emit(const std::u8string& name);
+    void on(const std::string& name, CallbackType callback);
+    void off(const std::string& name);
+    void emit(const std::string& name, mermaid::Event& event);
+    void emit(const std::string& name);
 
   private:
-    std::unordered_map<std::u8string, std::vector<CallbackType>> listeners;
+    std::unordered_map<std::string, std::vector<CallbackType>> listeners;
 };
 } // namespace mermaid
 #endif

@@ -14,27 +14,27 @@ class Label : public Widget
 {
 
   public:
-    static std::shared_ptr<mermaid::components::Label> create(std::u8string text, mermaid::Font& font);
+    static std::shared_ptr<mermaid::components::Label> create(std::string text, mermaid::Font& font);
 
     void setColor(Color color);
     Color getColor();
     void setFont(Font& font);
-    void setText(std::u8string text);
+    void setText(std::string text);
 
     void draw(Context& ctx) override;
     void update(Context& ctx) override;
     void setParent(std::shared_ptr<Widget> parent) override;
 
-    std::u8string getText();
+    std::string getText();
     mermaid::Font& getFont();
     ~Label();
 
   private:
-    Label(std::u8string text, mermaid::Font& font);
+    Label(std::string text, mermaid::Font& font);
     void updateTexture(Context& ctx);
     void updateSize();
 
-    std::u8string text;
+    std::string text;
     mermaid::Font& font;
     mermaid::Color color;
     bool dirty;

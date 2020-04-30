@@ -10,7 +10,7 @@
 
 namespace mermaid {
 
-using String = std::u8string;
+using String = std::string;
 
 struct Size
 {
@@ -286,13 +286,13 @@ struct Border
 using Margin = BoxProperties<int>;
 using Padding = BoxProperties<int>;
 
-using Value = std::variant<std::u8string, int, float, bool, BoxProperties<int>, Border, Color, Size, Point>;
+using Value = std::variant<std::string, int, float, bool, BoxProperties<int>, Border, Color, Size, Point>;
 
 class Options
 {
   public:
     template <typename T>
-    std::optional<T> get(std::u8string key)
+    std::optional<T> get(std::string key)
     {
         if (!options.contains(key) || !std::holds_alternative<T>(options[key])) {
             return std::nullopt;
@@ -301,70 +301,70 @@ class Options
         return std::get<T>(options[key]);
     }
 
-    bool has(std::u8string key)
+    bool has(std::string key)
     {
         return options.contains(key);
     }
 
-    void unset(std::u8string key)
+    void unset(std::string key)
     {
         if (has(key)) {
             options.erase(key);
         }
     }
 
-    void set(std::u8string key, std::u8string value)
+    void set(std::string key, std::string value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, const char8_t* value)
+    void set(std::string key, const char* value)
     {
-        options[key] = std::u8string(value);
+        options[key] = std::string(value);
     }
 
-    void set(std::u8string key, int value)
-    {
-        options[key] = value;
-    }
-
-    void set(std::u8string key, bool value)
+    void set(std::string key, int value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, float value)
+    void set(std::string key, bool value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, BoxProperties<int> value)
+    void set(std::string key, float value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, Border value)
+    void set(std::string key, BoxProperties<int> value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, Color value)
+    void set(std::string key, Border value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, Size value)
+    void set(std::string key, Color value)
     {
         options[key] = value;
     }
 
-    void set(std::u8string key, Point value)
+    void set(std::string key, Size value)
+    {
+        options[key] = value;
+    }
+
+    void set(std::string key, Point value)
     {
         options[key] = value;
     }
 
   private:
-    std::unordered_map<std::u8string, Value> options;
+    std::unordered_map<std::string, Value> options;
 };
 
 } // namespace mermaid

@@ -12,7 +12,7 @@ namespace mermaid {
 class SdlWindow
 {
   public:
-    static std::unique_ptr<mermaid::SdlWindow> create(std::u8string title, int x, int y, int width, int height,
+    static std::unique_ptr<mermaid::SdlWindow> create(std::string title, int x, int y, int width, int height,
                                                       unsigned int options);
     ~SdlWindow();
 
@@ -22,9 +22,9 @@ class SdlWindow
     SDL_Window* asSdlPointer() const;
 
   private:
-    SdlWindow(std::u8string title, int x, int y, int width, int height, unsigned int options);
+    SdlWindow(std::string title, int x, int y, int width, int height, unsigned int options);
 
-    SdlWindow(std::u8string title, int x, int y, int width, int height, unsigned int options,
+    SdlWindow(std::string title, int x, int y, int width, int height, unsigned int options,
               unsigned int renderer_options);
 
     SDL_Window* sdl_window;
