@@ -59,7 +59,17 @@ std::string mermaid::parser::CodeGenerator::doGenerateHeader(mermaid::parser::Pa
     ss << "#define " << guard << "\n\n";
 
     ss << "#include <mermaid/components/Widget.h>"
-       << "\n\n";
+       << "\n";
+
+    if (parser.usesString()) {
+        ss << "#include <string>\n";
+    }
+
+    if (parser.usesVector()) {
+        ss << "#include <vector>\n";
+    }
+
+    ss   << "\n";
 
     if (hasNs) {
         ss << "namespace " << parser.getNamespace() << " {\n\n";

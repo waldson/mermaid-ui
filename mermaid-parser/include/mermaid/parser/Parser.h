@@ -24,6 +24,8 @@ class Parser
     std::vector<mermaid::parser::Variable>& getProps();
     std::string getClass();
     std::string getNamespace();
+    bool usesString();
+    bool usesVector();
 
   private:
     void doParse(mermaid::parser::Lexer& lexer);
@@ -40,11 +42,13 @@ class Parser
     std::vector<mermaid::parser::Attribute> parseTagAttributes(mermaid::parser::Lexer& lexer);
     mermaid::parser::Attribute parseTagAttribute(mermaid::parser::Lexer& lexer);
     std::string parseAttrValue(mermaid::parser::Lexer& lexer);
+    void skipCommentBlock(mermaid::parser::Lexer& lexer);
     std::string className;
     std::string ns;
     std::vector<mermaid::parser::Variable> dataVariables;
     std::vector<mermaid::parser::Variable> props;
     mermaid::parser::Tag rootTag;
+    void validateAfterParse(mermaid::parser::Lexer& lexer);
 };
 } // namespace mermaid::parser
 #endif

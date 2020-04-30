@@ -2,6 +2,7 @@
 
 #include "mermaid/parser/Error.h"
 #include "mermaid/parser/Lexer.h"
+#include "mermaid/parser/Variable.h"
 
 #include <filesystem>
 #include <fstream>
@@ -14,7 +15,6 @@ mermaid::parser::Parser::Parser() : dataVariables()
 
 void mermaid::parser::Parser::parse(const std::string& filename)
 {
-
     if (!std::filesystem::exists(std::filesystem::path(filename))) {
         throw std::string("File does not exists: " + filename);
     }
@@ -53,8 +53,13 @@ void mermaid::parser::Parser::parse(const std::string& filename)
         lexer.consumeWhitespaces();
         doParse(lexer);
     }
+    validateAfterParse(lexer);
+}
+
+void mermaid::parser::Parser::validateAfterParse(mermaid::parser::Lexer& lexer)
+{
     if (className == "") {
-        error(location, "Class name must be defined. Missing 'class <name>;'");
+        throw std::string("Class name must be defined. Missing 'class <name>;'");
     }
 }
 
@@ -73,9 +78,41 @@ void mermaid::parser::Parser::parseFromString(const std::string& contents)
         doParse(lexer);
     }
 
-    if (className == "") {
-        error(location, "Class name must be defined. Missing 'class <name>;'");
+    validateAfterParse(lexer);
+}
+
+bool mermaid::parser::Parser::usesString()
+{
+    for (auto& f: getDataVariables()) {
+        if (f.type == mermaid::parser::VariableType::String) {
+            return true;
+        }
     }
+
+    for (auto& f: getProps()) {
+        if (f.type == mermaid::parser::VariableType::String) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool mermaid::parser::Parser::usesVector()
+{
+    for (auto& f: getDataVariables()) {
+        if (f.isArray) {
+            return true;
+        }
+    }
+
+    for (auto& f: getProps()) {
+        if (f.isArray) {
+            return true;
+        }
+    }
+
+    return false;
 }
 
 void mermaid::parser::Parser::doParse(mermaid::parser::Lexer& lexer)
@@ -96,9 +133,22 @@ void mermaid::parser::Parser::doParse(mermaid::parser::Lexer& lexer)
         parseProps(lexer);
     } else if (lexer.contains("layout")) {
         parseLayout(lexer);
+    } else if (lexer.contains("#") || lexer.contains("//")) {
+        lexer.consumeUntil("\n");
+    } else if (lexer.contains("/*")) {
+        skipCommentBlock(lexer);
     } else {
         error(lexer.getLocation(), "Unexpected character");
     }
+}
+
+void mermaid::parser::Parser::skipCommentBlock(mermaid::parser::Lexer& lexer)
+{
+    lexer.consume("/*");
+    while (!lexer.contains("*/")) {
+        lexer.advance();
+    }
+    lexer.consume("*/");
 }
 
 void mermaid::parser::Parser::parseData(mermaid::parser::Lexer& lexer)
