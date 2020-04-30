@@ -20,6 +20,7 @@ class Font
     TTF_Font* asSdlPointer();
     operator TTF_Font*() const;
     mermaid::Size getTextSize(std::string text);
+    int getHeight();
 
   private:
     std::string name;
