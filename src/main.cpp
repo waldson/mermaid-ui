@@ -1,3 +1,4 @@
+#include "cmrc/cmrc.hpp"
 #include "mermaid/Application.h"
 #include "mermaid/Core.h"
 #include "mermaid/Event.h"
@@ -16,10 +17,16 @@
 #include <string>
 #include <vector>
 
+CMRC_DECLARE(mermaid);
+
 int main(int argc, char* argv[])
 {
     using namespace mermaid;
     using namespace mermaid::components;
+
+    auto c = cmrc::mermaid::get_filesystem();
+    std::cout << c.exists("OK") << std::endl;
+    std::cout << c.exists("resources/fonts/Roboto-Regular.ttf") << std::endl;
 
     auto a = SdlContext::create();
     auto window =
@@ -36,8 +43,8 @@ int main(int argc, char* argv[])
     view3->setBackground(0, 100, 200);
     view4->setBackground(100, 180, 20);
 
-    auto hbox = HBox::create(10);
-    auto vbox = VBox::create(10);
+    auto hbox = HBox::create(5);
+    auto vbox = VBox::create(5);
     hbox->addChild(view);
     hbox->addChild(view2);
 
@@ -49,10 +56,9 @@ int main(int argc, char* argv[])
 
     /* text->setText("OK"); */
 
-    std::unique_ptr<ResourceManager<Font, std::string>> manager(new ResourceManager<Font, std::string>());
+    auto manager = std::make_unique<ResourceManager<Font, std::string>>();
 
-    auto font = manager->load("defaultFont", "/home/waldson/.local/share/fonts/Hack Regular Nerd Font Complete.ttf", 14)
-                    .value();
+    auto font = manager->load("defaultFont", "./resources/fonts/Roboto-Regular.ttf", 14).value();
     const std::string label = "Waldson Patrício";
     auto text = Label::create(label, *font);
     text->setPosition(20, 15);
@@ -85,19 +91,19 @@ int main(int argc, char* argv[])
         view->toggleVisible();
         if (view->isVisible()) {
             button->setText("Hide View");
-            /* view->hide(); */
+            // view->hide();
             button->setNormalColor(Color(50, 150, 50));
         } else {
             button->setText("Show View");
-            /* view->show(); */
+            // view->show();
             button->setNormalColor(Color(150, 50, 50));
         }
     });
-
+    //
     auto input = TextInput::create(*font);
     input->setValue("Input");
     input->setSize(600, 30);
-
+    //
     vbox->addChild(button);
     vbox->addChild(input);
 

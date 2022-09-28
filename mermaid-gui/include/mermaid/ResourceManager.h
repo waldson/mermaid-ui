@@ -7,7 +7,7 @@
 
 namespace mermaid {
 
-template <typename Resource, typename Key>
+template <typename Key, typename Resource>
 class ResourceManager
 {
   public:
@@ -22,9 +22,7 @@ class ResourceManager
             return get(key);
         }
 
-        std::unique_ptr<Resource> resource(
-            Resource::create(std::forward<Args>(args)...)
-        );
+        std::unique_ptr<Resource> resource(Resource::create(std::forward<Args>(args)...));
 
         storage.emplace(key, std::move(resource));
 
