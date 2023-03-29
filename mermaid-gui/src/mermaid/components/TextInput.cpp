@@ -2,11 +2,13 @@
 
 #include "SDL_clipboard.h"
 
+#include <algorithm>
+#include <cmath>
 #include <iostream>
 
 mermaid::components::TextInput::TextInput(mermaid::Font& font) :
     background(mermaid::components::View::create(0, 0)), label(mermaid::components::Label::create("", font)),
-    cursor(mermaid::components::Cursor::create())
+    cursor(mermaid::components::Cursor::create()), cursorPosition(0)
 {
     background->addChild(label);
     background->addChild(cursor);
@@ -39,25 +41,53 @@ void mermaid::components::TextInput::onKeyDown(mermaid::Event& evt)
     auto e = evt.getRawEvent();
     // TODO identify ctrl bound to another physical key
 
-    if (e.key.keysym.sym == SDLK_BACKSPACE) {
-        if (value.length() > 0) {
-            // TODO splice instead of pop
+    if (e.key.keysym.sym == SDLK_LEFT) {
+        if (cursorPosition > 0) {
+            --cursorPosition;
+        }
+    } else if (e.key.keysym.sym == SDLK_RIGHT) {
+        cursorPosition = std::min(static_cast<size_t>(rope.charCount()), cursorPosition + 1);
+    } else if (e.key.keysym.sym == SDLK_BACKSPACE) {
+        if (rope.charCount() > 0 && cursorPosition > 0) {
             // TODO ctrl backspace to delete word
-            setValue(value.substr(0, value.length() - 1));
+            rope.erase(cursorPosition - 1, 1);
+            rope.rebalance();
+
+            setValue(rope.toString());
+        }
+        cursorPosition = cursorPosition > 0 ? cursorPosition - 1 : 0;
+    } else if (e.key.keysym.sym == SDLK_HOME) {
+        cursorPosition = 0;
+    } else if (e.key.keysym.sym == SDLK_END) {
+        cursorPosition = rope.charCount();
+    } else if (e.key.keysym.sym == SDLK_DELETE) {
+        if (rope.charCount() > 0) {
+            // TODO ctrl backspace to delete word
+            rope.erase(cursorPosition, 1);
+            rope.rebalance();
+
+            setValue(rope.toString());
         }
     } else if (e.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_LCTRL) {
-        append(SDL_GetClipboardText());
+        size_t previousSize = rope.charCount();
+        rope.insert(cursorPosition, SDL_GetClipboardText());
+        rope.rebalance();
+        size_t currentSize = rope.charCount();
+        setValue(rope.toString());
+        cursorPosition += (currentSize - previousSize);
     } else if (e.key.keysym.sym == SDLK_u && SDL_GetModState() & KMOD_LCTRL) {
-        setValue("");
+        rope.erase(0, cursorPosition);
+        rope.rebalance();
+        cursorPosition = 0;
+        setValue(rope.toString());
     }
 }
 
 void mermaid::components::TextInput::append(const std::string& text)
 {
-    auto str = value;
-    str.append(text);
-
-    setValue(str);
+    rope.insert(cursorPosition, text);
+    ++cursorPosition;
+    setValue(rope.toString());
 }
 
 void mermaid::components::TextInput::onTextInput(mermaid::Event& evt)
@@ -72,7 +102,8 @@ void mermaid::components::TextInput::draw(Context& ctx)
     auto cursorRect = cursor->getDrawRect();
 
     label->setPosition(10, (bgRect.height - textRect.height) / 2);
-    cursor->setPosition(textRect.width + textRect.x, (bgRect.height - cursorRect.height) / 2);
+    auto cPosition = label->calculateSize(rope.substring(0, cursorPosition));
+    cursor->setPosition(textRect.x + cPosition.width, (bgRect.height - cursorRect.height) / 2);
     /* text->setPosition(0, 0); */
 
     auto parentPosition = getParentPosition();
@@ -84,15 +115,12 @@ void mermaid::components::TextInput::draw(Context& ctx)
 
 void mermaid::components::TextInput::setValue(const std::string& value)
 {
-    if (this->value != value) {
-        this->value = value;
-        label->setText(value);
-    }
+    label->setText(value);
 }
 
 std::string mermaid::components::TextInput::getValue()
 {
-    return value;
+    return rope.toString();
 }
 
 mermaid::Size mermaid::components::TextInput::getSize()

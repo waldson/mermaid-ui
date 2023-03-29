@@ -17,16 +17,13 @@
 #include <string>
 #include <vector>
 
-CMRC_DECLARE(mermaid);
-
 int main(int argc, char* argv[])
 {
     using namespace mermaid;
     using namespace mermaid::components;
 
-    auto c = cmrc::mermaid::get_filesystem();
-    std::cout << c.exists("OK") << std::endl;
-    std::cout << c.exists("resources/fonts/Roboto-Regular.ttf") << std::endl;
+    // std::cout << c.exists("OK") << std::endl;
+    // std::cout << c.exists("./resources/fonts/Roboto Mono Nerd Font Complete.ttf") << std::endl;
 
     auto a = SdlContext::create();
     auto window =
@@ -56,9 +53,9 @@ int main(int argc, char* argv[])
 
     /* text->setText("OK"); */
 
-    auto manager = std::make_unique<ResourceManager<Font, std::string>>();
+    auto manager = std::unique_ptr<ResourceManager<std::string, Font>>(new ResourceManager<std::string, Font>());
 
-    auto font = manager->load("defaultFont", "./resources/fonts/Roboto-Regular.ttf", 14).value();
+    auto font = manager->load("defaultFont", "./resources/fonts/Roboto-Regular.ttf", 16).value();
     const std::string label = "Waldson Patrício";
     auto text = Label::create(label, *font);
     text->setPosition(20, 15);
@@ -99,10 +96,9 @@ int main(int argc, char* argv[])
             button->setNormalColor(Color(150, 50, 50));
         }
     });
-    //
+
     auto input = TextInput::create(*font);
-    input->setValue("Input");
-    input->setSize(600, 30);
+    input->setSize(600, 40);
     //
     vbox->addChild(button);
     vbox->addChild(input);

@@ -18,12 +18,13 @@ std::shared_ptr<mermaid::components::Cursor> mermaid::components::Cursor::create
 void mermaid::components::Cursor::update(Context& ctx)
 {
     if (blinkInterval > 0) {
-        elapsedTime += ctx.deltaTime / 1000;
+        elapsedTime += ctx.deltaTime;
         if (up) {
             color.a = std::min<int>(255, static_cast<int>(255.0 * (elapsedTime / blinkInterval)));
         } else {
             color.a = std::max<int>(0, 255 - static_cast<int>(255.0 * (elapsedTime / blinkInterval)));
         }
+
         if (elapsedTime > blinkInterval) {
             while (elapsedTime > blinkInterval) {
                 elapsedTime -= blinkInterval;

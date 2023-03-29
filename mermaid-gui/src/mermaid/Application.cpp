@@ -7,6 +7,7 @@
 #include <SDL2/SDL.h>
 #include <algorithm>
 #include <chrono>
+#include <iostream>
 #include <memory>
 
 mermaid::Application::Application(mermaid::SdlWindow& window) :
@@ -102,7 +103,7 @@ void mermaid::Application::handleTextInputEvent(SDL_Event& evt, mermaid::Context
 
 void mermaid::Application::handleMouseButtonDownEvents(SDL_Event& e, mermaid::Context& ctx)
 {
-    mermaid::Point location(e.button.x, e.motion.y);
+    mermaid::Point location(e.button.x, e.button.y);
     auto currentMouseDownWidgets = raycast(location);
 
     if (!latestMouseDownWidgets.contains(e.button.button)) {
@@ -129,7 +130,7 @@ void mermaid::Application::handleMouseButtonDownEvents(SDL_Event& e, mermaid::Co
 
 void mermaid::Application::handleMouseButtonUpEvents(SDL_Event& e, mermaid::Context& ctx)
 {
-    mermaid::Point location(e.button.x, e.motion.y);
+    mermaid::Point location(e.button.x, e.button.y);
     auto currentMouseUpWidgets = raycast(location);
 
     auto evt = mermaid::Event::fromRaw(e);
@@ -239,7 +240,7 @@ void mermaid::Application::handleMouseMotionEvents(SDL_Event& e, mermaid::Contex
 
 void mermaid::Application::draw(mermaid::Context& ctx)
 {
-    if (rootComponent.get() == nullptr || !rootComponent->isVisible()) {
+    if (!rootComponent || !rootComponent->isVisible()) {
         return;
     }
     rootComponent->draw(ctx);
@@ -268,7 +269,7 @@ void mermaid::Application::run()
     duration<float, std::milli> elapsed(end - begin);
     this->delta = 0;
 
-    bool quit = false;
+    bool shouldQuit = false;
 
     mermaid::Context ctx;
 
@@ -276,19 +277,20 @@ void mermaid::Application::run()
     ctx.window = &window;
     ctx.deltaTime = delta;
 
-    while (running && !quit) {
-        begin = steady_clock::now();
-
+    begin = steady_clock::now();
+    while (running && !shouldQuit) {
         clear();
-        quit = processEvents(ctx);
+        shouldQuit = processEvents(ctx);
         update(ctx);
         draw(ctx);
         display();
 
         end = steady_clock::now();
         elapsed = end - begin;
-        this->delta = elapsed.count();
+        this->delta = elapsed.count() / 1000.0f;
         ctx.deltaTime = delta;
+
+        begin = steady_clock::now();
 
         if (this->delta < frame_duration) {
             SDL_Delay(frame_duration - this->delta);

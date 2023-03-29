@@ -13,6 +13,7 @@ mermaid::SdlWindow::SdlWindow(std::string title, int x, int y, int width, int he
     :
     mermaid::SdlWindow::SdlWindow(title, x, y, width, height, options,
                                   SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
+// SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 {
 }
 

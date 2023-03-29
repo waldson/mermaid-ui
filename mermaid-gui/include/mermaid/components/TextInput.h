@@ -11,6 +11,7 @@
 
 #include <memory>
 #include <string>
+#include <w5n/Rope.hpp>
 
 namespace mermaid::components {
 
@@ -36,10 +37,12 @@ class TextInput : public Widget
   private:
     TextInput(mermaid::Font& font);
 
-    std::string value;
     std::shared_ptr<mermaid::components::View> background;
     std::shared_ptr<mermaid::components::Label> label;
     std::shared_ptr<mermaid::components::Cursor> cursor;
+    size_t cursorPosition;
+
+    w5n::Rope rope;
     void onKeyUp(mermaid::Event&) override;
     void onKeyDown(mermaid::Event&) override;
     void onTextInput(mermaid::Event&) override;

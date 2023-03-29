@@ -36,6 +36,13 @@ void mermaid::components::Label::update(Context& ctx)
         dirty = false;
     }
 }
+mermaid::Size mermaid::components::Label::calculateSize(const std::string& value) const
+{
+    mermaid::Size size;
+    TTF_SizeUTF8(font.asSdlPointer(), value.c_str(), &size.width, &size.height);
+
+    return size;
+}
 
 void mermaid::components::Label::updateSize()
 {
@@ -104,8 +111,8 @@ void mermaid::components::Label::updateTexture(Context& ctx)
     std::unique_ptr<SDL_Surface, decltype(&SDL_FreeSurface)> surface(
         TTF_RenderUTF8_Blended(font, text.c_str(), color.toSdlColor()), SDL_FreeSurface);
 
-    SDL_SetSurfaceBlendMode(&*surface, SDL_BLENDMODE_BLEND);
-    textureCache = SDL_CreateTextureFromSurface(ctx.window->getRenderer(), &*surface);
+    SDL_SetSurfaceBlendMode(&(*surface), SDL_BLENDMODE_BLEND);
+    textureCache = SDL_CreateTextureFromSurface(ctx.window->getRenderer(), &(*surface));
     dirty = false;
     /* font.asSdlPointer()->c */
 }
