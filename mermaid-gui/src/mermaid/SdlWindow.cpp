@@ -13,7 +13,6 @@ mermaid::SdlWindow::SdlWindow(std::string title, int x, int y, int width, int he
     :
     mermaid::SdlWindow::SdlWindow(title, x, y, width, height, options,
                                   SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
-// SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)
 {
 }
 
@@ -24,7 +23,7 @@ mermaid::SdlWindow::SdlWindow(std::string title, int x, int y, int width, int he
     renderer = SdlRenderer::create(this, -1, renderer_options);
 }
 
-SDL_Renderer* mermaid::SdlWindow::getRenderer()
+mermaid::SdlRenderer& mermaid::SdlWindow::getRenderer()
 {
     return *this->renderer;
 }
@@ -40,6 +39,26 @@ std::unique_ptr<mermaid::SdlWindow> mermaid::SdlWindow::create(std::string title
 mermaid::SdlWindow::operator SDL_Window*() const
 {
     return sdl_window;
+}
+
+int mermaid::SdlWindow::getWidth() const
+{
+    int w = 0;
+    int h = 0;
+
+    SDL_GetWindowSizeInPixels(sdl_window, &w, &h);
+
+    return w;
+}
+
+int mermaid::SdlWindow::getHeight() const
+{
+    int w = 0;
+    int h = 0;
+
+    SDL_GetWindowSizeInPixels(sdl_window, &w, &h);
+
+    return h;
 }
 
 SDL_Window* mermaid::SdlWindow::asSdlPointer() const

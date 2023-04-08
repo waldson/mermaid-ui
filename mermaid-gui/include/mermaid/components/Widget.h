@@ -82,7 +82,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
     void emit(const std::string& name);
     void emit(const std::string& name, mermaid::Event& evt);
 
-    inline virtual void onMouseEnter(mermaid::Event& evt)
+    inline virtual void onMouseEnter(mermaid::Event&)
     {
         // for (auto& w : getChildren()) {
         //     if (evt.isCanceled()) {
@@ -92,7 +92,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
         // }
     }
 
-    inline virtual void onMouseLeave(mermaid::Event& evt)
+    inline virtual void onMouseLeave(mermaid::Event&)
     {
         // for (auto& w : getChildren()) {
         //     if (evt.isCanceled()) {
@@ -102,7 +102,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
         // }
     }
 
-    inline virtual void onMouseMove(mermaid::Event& evt)
+    inline virtual void onMouseMove(mermaid::Event&)
     {
         // for (auto& w : getChildren()) {
         //     if (evt.isCanceled()) {
@@ -112,7 +112,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
         // }
     }
 
-    inline virtual void onMouseDown(mermaid::Event& evt)
+    inline virtual void onMouseDown(mermaid::Event&)
     {
         // for (auto& w : getChildren()) {
         //     if (evt.isCanceled()) {
@@ -122,7 +122,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
         // }
     }
 
-    inline virtual void onMouseUp(mermaid::Event& evt)
+    inline virtual void onMouseUp(mermaid::Event&)
     {
         // for (auto& w : getChildren()) {
         //     if (evt.isCanceled()) {
@@ -132,7 +132,7 @@ class Widget : public Component, public std::enable_shared_from_this<mermaid::co
         // }
     }
 
-    inline virtual void onClick(mermaid::Event& evt)
+    inline virtual void onClick(mermaid::Event&)
     {
         // for (auto& w : getChildren()) {
         //     if (evt.isCanceled()) {

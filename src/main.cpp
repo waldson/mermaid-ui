@@ -12,12 +12,13 @@
 #include "mermaid/components/View.h"
 
 #include <SDL2/SDL.h>
+#include <SDL_video.h>
 #include <iostream>
 #include <memory>
 #include <string>
 #include <vector>
 
-int main(int argc, char* argv[])
+int main()
 {
     using namespace mermaid;
     using namespace mermaid::components;
@@ -25,11 +26,12 @@ int main(int argc, char* argv[])
     // std::cout << c.exists("OK") << std::endl;
     // std::cout << c.exists("./resources/fonts/Roboto Mono Nerd Font Complete.ttf") << std::endl;
 
-    auto a = SdlContext::create();
-    auto window =
-        a->createWindow("Teste", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600, SDL_WINDOW_SHOWN);
+    // auto a = SdlContext::create();
+    // auto window = a->createWindow("Teste", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 800, 600,
+    //                               SDL_WINDOW_SHOWN | SDL_WINDOW_ALLOW_HIGHDPI);
 
-    Application app(*window);
+    // Application app(*window);
+    Application app("Hello World", 0, 0, 1024, 1024);
     auto view = View::create(0, 0, 450, 50);
     auto view2 = View::create(0, 0, 200, 50);
     auto view3 = View::create(0, 0, 200, 50);
@@ -55,7 +57,9 @@ int main(int argc, char* argv[])
 
     auto manager = std::unique_ptr<ResourceManager<std::string, Font>>(new ResourceManager<std::string, Font>());
 
-    auto font = manager->load("defaultFont", "./resources/fonts/Roboto-Regular.ttf", 16).value();
+    // auto font = manager->load("defaultFont", "./resources/fonts/Roboto-Regular.ttf", 16).value();
+    // auto font = manager->load("defaultFont", "./resources/fonts/Roboto Mono Nerd Font Complete.ttf", 16).value();
+    auto font = manager->load("defaultFont", "./resources/fonts/RobotoMono-Bold.ttf", 16).value();
     const std::string label = "Waldson Patrício";
     auto text = Label::create(label, *font);
     text->setPosition(20, 15);
@@ -70,7 +74,7 @@ int main(int argc, char* argv[])
     texts.push_back("Teste 3");
     texts.push_back("Working 4");
 
-    view->on("click", [&](Event& evt) {
+    view->on("click", [&](Event&) {
         text->setText(texts[clicks % texts.size()]);
         clicks++;
     });
@@ -84,18 +88,34 @@ int main(int argc, char* argv[])
 
     button->setSize(120, 50);
 
-    button->on("action", [&](const Event& evt) {
+    button->on("action", [&](const Event&) {
         view->toggleVisible();
         if (view->isVisible()) {
             button->setText("Hide View");
             // view->hide();
             button->setNormalColor(Color(50, 150, 50));
+            button->setHoverColor(Color(50, 250, 50));
+            button->setActiveColor(Color(50, 100, 50));
+            button->setTextColor(Color(25, 100, 25));
         } else {
             button->setText("Show View");
             // view->show();
             button->setNormalColor(Color(150, 50, 50));
+            button->setHoverColor(Color(150, 0, 0));
+            button->setHoverColor(Color(150, 100, 100));
+            button->setHoverColor(Color(100, 25, 25));
         }
     });
+
+    auto& context = app.getRenderer().getDrawContext();
+    context.setRGBA(1, 1, 0, 1)
+        .drawCircle(300, 300, 10)
+        .fill()
+        .setRGBA255(252, 115, 0, 255)
+        .setLineWidth(2)
+        .drawCircle(300, 300, 10)
+        .stroke();
+    context.setRGBA255(88, 108, 188, 200).drawCircle(303, 303, 10).fill();
 
     auto input = TextInput::create(*font);
     input->setSize(600, 40);

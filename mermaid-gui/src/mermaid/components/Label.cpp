@@ -56,7 +56,7 @@ void mermaid::components::Label::draw(Context& ctx)
     if (textureCache) {
         auto rect = getDrawRect().toSdlRect();
 
-        SDL_RenderCopy(ctx.window->getRenderer(), textureCache, nullptr, &rect);
+        SDL_RenderCopy(ctx.window->getRenderer().asSdlPointer(), textureCache, nullptr, &rect);
     } else {
         dirty = true;
     }
@@ -112,7 +112,7 @@ void mermaid::components::Label::updateTexture(Context& ctx)
         TTF_RenderUTF8_Blended(font, text.c_str(), color.toSdlColor()), SDL_FreeSurface);
 
     SDL_SetSurfaceBlendMode(&(*surface), SDL_BLENDMODE_BLEND);
-    textureCache = SDL_CreateTextureFromSurface(ctx.window->getRenderer(), &(*surface));
+    textureCache = SDL_CreateTextureFromSurface(ctx.window->getRenderer().asSdlPointer(), &(*surface));
     dirty = false;
     /* font.asSdlPointer()->c */
 }
