@@ -14,7 +14,7 @@
 
 using namespace mermaid;
 
-mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget()
+mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget(), m_borderRadius(0)
 {
     setPosition(x, y);
     setSize(width, height);
@@ -49,39 +49,17 @@ void mermaid::components::View::draw(Context& ctx)
     // SDL_SetRenderTarget(renderer, texture);
     const auto rect = getDrawRect();
     auto& drawContext = ctx.window->getRenderer().getDrawContext();
-    drawContext.push()
-        .setRGBA255(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a)
-        .drawRectangle(rect.x, rect.y, rect.width, rect.height)
-        .fill()
-        .pop();
+    drawContext.push().setRGBA255(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
 
-    // SDL_RenderFillRect(renderer, &rect);
-    //
-    // SDL_SetRenderDrawColor(renderer, 255.0f, 255.0f, 0.0f, 255.0f);
+    if (m_borderRadius > 0) {
+        drawContext.drawRoundedRectangle(rect.x, rect.y, rect.width, rect.height, m_borderRadius);
+    } else {
+        drawContext.drawRectangle(rect.x, rect.y, rect.width, rect.height);
+    }
 
-    // aacircleRGBA(renderer, 400, 100, 16, 255, 255, 255, 255);
-    // filledCircleRGBA(renderer, 400, 100, 16, 255, 255, 255, 255);
-    // draw_circle(renderer, 200, 200, 20, SDL_Color(255, 255, 0, 255));
-    // SDL_RenderDrawCircle(renderer, 100, 300, 20);
-    // SDL_RenderFillCircle(renderer, 100, 300, 20);
-    // SDL_RenderDrawCircle(renderer, 200, 200, 48);
-    // roundedRectangleRGBA(renderer, 100, 400, 300, 500, 10, 255, 255, 255, 255);
+    drawContext.fill().pop();
 
-    // aacircleColor(renderer, 100, 300, 20, 16776960);
-    // filledCircleRGBA(renderer, 100, 400, 10, 255, 255, 0, 255);
-    // aaellipseRGBA(renderer, 100, 300, 20, 20, 255, 255, 0, 255);
-
-    // SDL_RenderFillCircle(renderer, 100, 300, 10);
-    // aaFilledEllipseRGBA(renderer, 100, 300, 20, 20, 255, 255, 0, 255);
-    // roundedBoxRGBA(renderer, 10, 10, 100, 100, 10, 255, 255, 0, 255);
-    // roundedBoxRGBA(renderer, 100, 400, 300, 500, 20, 255, 255, 255, 255);
-
-    // SDL_Render
     mermaid::components::Widget::draw(ctx);
-    // const SDL_Rect wRect{0, 0, width, height};
-    // SDL_RenderCopy(renderer, texture, &wRect, &wRect);
-
-    // SDL_SetRenderTarget(renderer, nullptr);
 }
 
 void mermaid::components::View::setBackground(Color color)
@@ -97,4 +75,9 @@ void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, st
 void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b)
 {
     backgroundColor = Color(r, g, b);
+}
+
+void mermaid::components::View::setBorderRadius(float borderRadius)
+{
+    m_borderRadius = borderRadius;
 }

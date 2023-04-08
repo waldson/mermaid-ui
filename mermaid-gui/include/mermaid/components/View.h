@@ -22,6 +22,7 @@ class View : public Widget
     void setBackground(Color color);
     void setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b, std::uint8_t a);
     void setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b);
+    void setBorderRadius(float borderRadius);
 
     void draw(Context& ctx) override;
 
@@ -31,6 +32,7 @@ class View : public Widget
 
   private:
     mermaid::Color backgroundColor;
+    float m_borderRadius;
 };
 } // namespace mermaid::components
 #endif

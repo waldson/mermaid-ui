@@ -42,7 +42,7 @@ void mermaid::SdlRenderer::initCairo()
     m_drawTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_rendererWidth,
                                       m_rendererHeight);
 
-    m_drawContext = std::make_unique<graphics::SDL2DrawContext>(m_cairoContext);
+    m_drawContext = std::make_unique<graphics::SDL2DrawContext>(m_cairoContext, renderer);
     m_renderRect = SDL_Rect{0, 0, m_rendererWidth, m_rendererHeight};
 }
 

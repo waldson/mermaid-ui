@@ -34,16 +34,19 @@ int main()
     Application app("Hello World", 0, 0, 1024, 1024);
     auto view = View::create(0, 0, 450, 50);
     auto view2 = View::create(0, 0, 200, 50);
-    auto view3 = View::create(0, 0, 200, 50);
-    auto view4 = View::create(0, 0, 200, 50);
+    auto view3 = View::create(0, 0, 200, 100);
+    auto view4 = View::create(0, 0, 200, 100);
 
     view->setBackground(50, 60, 70);
     view2->setBackground(100, 0, 200);
     view3->setBackground(0, 100, 200);
+    view3->setBorderRadius(20);
     view4->setBackground(100, 180, 20);
 
-    auto hbox = HBox::create(5);
-    auto vbox = VBox::create(5);
+    auto hbox = HBox::create(10);
+    auto vbox = VBox::create(10);
+
+    vbox->setPosition(20, 20);
     hbox->addChild(view);
     hbox->addChild(view2);
 
@@ -74,6 +77,8 @@ int main()
     texts.push_back("Teste 3");
     texts.push_back("Working 4");
 
+    view->setBorderRadius(5);
+
     view->on("click", [&](Event&) {
         text->setText(texts[clicks % texts.size()]);
         clicks++;
@@ -98,6 +103,7 @@ int main()
             button->setActiveColor(Color(50, 100, 50));
             button->setTextColor(Color(25, 100, 25));
         } else {
+            app.getRenderer().getDrawContext().savePNG("teste.png");
             button->setText("Show View");
             // view->show();
             button->setNormalColor(Color(150, 50, 50));

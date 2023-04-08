@@ -36,6 +36,7 @@ void mermaid::components::Label::update(Context& ctx)
         dirty = false;
     }
 }
+
 mermaid::Size mermaid::components::Label::calculateSize(const std::string& value) const
 {
     mermaid::Size size;
@@ -53,13 +54,24 @@ void mermaid::components::Label::updateSize()
 
 void mermaid::components::Label::draw(Context& ctx)
 {
-    if (textureCache) {
-        auto rect = getDrawRect().toSdlRect();
+    auto& drawContext = ctx.window->getRenderer().getDrawContext();
+    auto rect = getDrawRect();
 
-        SDL_RenderCopy(ctx.window->getRenderer().asSdlPointer(), textureCache, nullptr, &rect);
-    } else {
-        dirty = true;
-    }
+    const auto [textWidth, textHeight] = drawContext.measureString(text);
+
+    drawContext
+        .push() //
+        .setRGBA255(color.r, color.g, color.b, color.a)
+        .drawString(text, rect.x, (rect.y + (rect.y - textHeight) / 2))
+        .pop();
+
+    // if (textureCache) {
+    //     auto rect = getDrawRect();
+    //
+    //     SDL_RenderCopy(ctx.window->getRenderer().asSdlPointer(), textureCache, nullptr, &rect);
+    // } else {
+    //     dirty = true;
+    // }
 }
 
 void mermaid::components::Label::setColor(Color color)

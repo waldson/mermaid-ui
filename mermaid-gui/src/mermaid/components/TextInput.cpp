@@ -97,19 +97,28 @@ void mermaid::components::TextInput::onTextInput(mermaid::Event& evt)
 
 void mermaid::components::TextInput::draw(Context& ctx)
 {
+    auto& drawContext = ctx.window->getRenderer().getDrawContext();
     auto bgRect = background->getDrawRect();
     auto textRect = label->getDrawRect();
     auto cursorRect = cursor->getDrawRect();
 
     label->setPosition(10, (bgRect.height - textRect.height) / 2);
-    auto cPosition = label->calculateSize(rope.substring(0, cursorPosition));
-    cursor->setPosition(textRect.x + cPosition.width, (bgRect.height - cursorRect.height) / 2);
+
+    const auto [width, height] = drawContext.measureString(rope.substring(0, cursorPosition));
+
+    cursor->setPosition(textRect.x + width, (bgRect.height - 16) / 2);
     /* text->setPosition(0, 0); */
 
     auto parentPosition = getParentPosition();
 
     background->setPosition(bgRect.x + parentPosition.x, bgRect.y + parentPosition.y);
     background->draw(ctx);
+    drawContext.push()
+        .setRGB255(150, 150, 150)
+        .setLineWidth(2)
+        .drawRectangle(bgRect.x + parentPosition.x, bgRect.y + parentPosition.y, bgRect.width, bgRect.height)
+        .stroke()
+        .pop();
     background->setPosition(bgRect.x, bgRect.y);
 }
 

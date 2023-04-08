@@ -288,9 +288,9 @@ void mermaid::Application::run()
 
     begin = steady_clock::now();
     while (running && !shouldQuit) {
-        clear();
         shouldQuit = processEvents(ctx);
         update(ctx);
+        clear();
         draw(ctx);
         display();
 
