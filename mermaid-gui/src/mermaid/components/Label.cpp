@@ -59,10 +59,24 @@ void mermaid::components::Label::draw(Context& ctx)
 
     const auto [textWidth, textHeight] = drawContext.measureString(text);
 
-    drawContext
-        .push() //
+    drawContext.push()
         .setRGBA255(color.r, color.g, color.b, color.a)
-        .drawString(text, rect.x, (rect.y + (rect.y - textHeight) / 2))
+        .drawString(text, rect.x, (rect.y + ((rect.height - textHeight + 12) / 2))) // 8 = half of the font size
+        .pop();
+
+    drawContext.push()
+        .setRGBA255(255, 255, 255, 255)
+        .drawRoundedRectangle(100, 100, 150, 50, 25)
+        .fillPreserve()
+        .setRGBA255(100, 200, 50, 255)
+        .stroke()
+        .pop()
+        .push()
+        .setRGBA255(100, 200, 50, 255)
+        .drawCircle(225, 125, 30)
+        .fillPreserve()
+        .setRGB255(255, 255, 255)
+        .stroke()
         .pop();
 
     // if (textureCache) {

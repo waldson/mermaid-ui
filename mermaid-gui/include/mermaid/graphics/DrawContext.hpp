@@ -11,6 +11,8 @@ struct DrawContext
 {
     virtual ~DrawContext() = default;
 
+    virtual DrawContext& setDirty(bool dirty) = 0;
+    virtual bool isDirty() const = 0;
     virtual void savePNG(const std::string& filename) = 0;
     virtual DrawContext& drawPoint(const float x, const float y, const float radius) = 0;
     virtual DrawContext& drawLine(const float x1, const float y1, const float x2, const float y2) = 0;

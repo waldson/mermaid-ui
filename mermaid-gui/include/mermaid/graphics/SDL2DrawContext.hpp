@@ -17,6 +17,8 @@ class SDL2DrawContext : public DrawContext
     SDL2DrawContext(cairo_t* cairoContext, SDL_Renderer* renderer);
     virtual ~SDL2DrawContext() = default;
 
+    virtual DrawContext& setDirty(bool dirty) override;
+    virtual bool isDirty() const override;
     virtual void savePNG(const std::string& filename) override;
     virtual DrawContext& drawPoint(const float x, const float y, const float radius) override;
     virtual DrawContext& drawLine(const float x1, const float y1, const float x2, const float y2) override;
@@ -71,6 +73,7 @@ class SDL2DrawContext : public DrawContext
   private:
     cairo_t* m_cairoContext;
     SDL_Renderer* m_sdlRenderer;
+    bool m_dirty;
 };
 
 } // namespace mermaid::graphics

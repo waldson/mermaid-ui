@@ -39,8 +39,8 @@ void mermaid::SdlRenderer::initCairo()
     cairo_surface_set_device_scale(m_cairoSurface, cairoXMultiplier, cairoYMultiplier);
     m_cairoContext = cairo_create(m_cairoSurface);
 
-    m_drawTexture = SDL_CreateTexture(renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_rendererWidth,
-                                      m_rendererHeight);
+    m_drawTexture = SDL_CreateTexture(
+        renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, m_rendererWidth, m_rendererHeight);
 
     m_drawContext = std::make_unique<graphics::SDL2DrawContext>(m_cairoContext, renderer);
     m_renderRect = SDL_Rect{0, 0, m_rendererWidth, m_rendererHeight};
@@ -105,9 +105,12 @@ graphics::DrawContext& mermaid::SdlRenderer::getDrawContext() const
 
 void mermaid::SdlRenderer::render()
 {
-    SDL_UpdateTexture(m_drawTexture, &m_renderRect, m_drawSurface->pixels, m_drawSurface->pitch);
-    SDL_RenderCopy(renderer, m_drawTexture, NULL, NULL);
-    SDL_RenderPresent(renderer);
+    if (m_drawContext->isDirty()) {
+        SDL_UpdateTexture(m_drawTexture, &m_renderRect, m_drawSurface->pixels, m_drawSurface->pitch);
+        SDL_RenderCopy(renderer, m_drawTexture, NULL, NULL);
+        SDL_RenderPresent(renderer);
+        m_drawContext->setDirty(false);
+    }
 }
 
 void mermaid::SdlRenderer::clear()

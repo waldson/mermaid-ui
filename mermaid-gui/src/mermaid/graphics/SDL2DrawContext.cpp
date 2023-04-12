@@ -10,7 +10,7 @@
 #include <string>
 
 mermaid::graphics::SDL2DrawContext::SDL2DrawContext(cairo_t* cairoContext, SDL_Renderer* renderer) :
-    m_cairoContext(cairoContext), m_sdlRenderer(renderer)
+    m_cairoContext(cairoContext), m_sdlRenderer(renderer), m_dirty(true)
 {
 }
 
@@ -45,6 +45,8 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawPoint(co
                                                                               const float radius)
 {
     cairo_arc(m_cairoContext, x, y, radius, 0, std::numbers::pi * 2);
+    m_dirty = true;
+
     return *this;
 }
 
@@ -58,6 +60,7 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawRectangl
                                                                                   const float width, const float height)
 {
     cairo_rectangle(m_cairoContext, x, y, width, height);
+    m_dirty = true;
 
     return *this;
 }
@@ -74,6 +77,8 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawRoundedR
     cairo_arc(m_cairoContext, x + radius, y + radius, radius, 180 * degrees, 270 * degrees);
     cairo_close_path(m_cairoContext);
 
+    m_dirty = true;
+
     return *this;
 }
 
@@ -81,6 +86,8 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawCircle(c
                                                                                const float r)
 {
     cairo_arc(m_cairoContext, x, y, r, 0, 2 * std::numbers::pi);
+
+    m_dirty = true;
 
     return *this;
 }
@@ -94,6 +101,7 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawArc(cons
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawEllipse(const float x, const float y,
                                                                                 const float rx, const float ry)
 {
+
     return drawEllipticalArc(x, y, rx, ry, 0, std::numbers::pi * 2);
 }
 
@@ -116,7 +124,7 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawElliptic
     cairo_arc(m_cairoContext, x, y, rx, angle1, angle2);
     cairo_set_matrix(m_cairoContext, &originalMatrix);
 
-    // cairo_arc(m_cairoContext, x, y, r)
+    m_dirty = true;
     return *this;
 }
 
@@ -128,13 +136,6 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawRegularP
 
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::setPixel(const int x, const int y)
 {
-    // m_point.x = x;
-    // m_point.y = y;
-    //
-    // beginDraw();
-    // SDL_RenderDrawPoint(m_renderer, x, y);
-    // endDraw();
-    //
     return *this;
 }
 
@@ -149,6 +150,8 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::lineTo(const
 {
     cairo_line_to(m_cairoContext, x, y);
 
+    m_dirty = true;
+
     return *this;
 }
 
@@ -160,6 +163,9 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::quadraticTo(
     cairo_get_current_point(m_cairoContext, &x0, &y0);
     cairo_curve_to(m_cairoContext, 2.0 / 3.0 * x1 + 1.0 / 3.0 * x0, 2.0 / 3.0 * y1 + 1.0 / 3.0 * y0,
                    2.0 / 3.0 * x1 + 1.0 / 3.0 * x2, 2.0 / 3.0 * y1 + 1.0 / 3.0 * y2, y1, y2);
+
+    m_dirty = true;
+
     return *this;
 }
 
@@ -168,12 +174,17 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::cubicTo(
 {
     cairo_curve_to(m_cairoContext, x1, y1, x2, y2, x3, y3);
 
+    m_dirty = true;
+
     return *this;
 }
 
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::closePath()
 {
     cairo_close_path(m_cairoContext);
+
+    m_dirty = true;
+
     return *this;
 }
 
@@ -196,24 +207,36 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::clear()
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::stroke()
 {
     cairo_stroke(m_cairoContext);
+
+    m_dirty = true;
+
     return *this;
 }
 
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::fill()
 {
     cairo_fill(m_cairoContext);
+
+    m_dirty = true;
+
     return *this;
 }
 
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::strokePreserve()
 {
     cairo_stroke_preserve(m_cairoContext);
+
+    m_dirty = true;
+
     return *this;
 }
 
 mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::fillPreserve()
 {
     cairo_fill_preserve(m_cairoContext);
+
+    m_dirty = true;
+
     return *this;
 }
 
@@ -281,11 +304,14 @@ mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::drawString(c
                                                                                const float y)
 {
     push();
-    cairo_select_font_face(m_cairoContext, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+    cairo_select_font_face(m_cairoContext, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
     cairo_set_font_size(m_cairoContext, 16);
     cairo_move_to(m_cairoContext, x, y);
     cairo_show_text(m_cairoContext, s.c_str());
     pop();
+
+    m_dirty = true;
+
     return *this;
 }
 
@@ -306,12 +332,13 @@ std::pair<float, float> mermaid::graphics::SDL2DrawContext::measureString(std::s
 {
     push();
     cairo_text_extents_t extents;
-    cairo_select_font_face(m_cairoContext, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_NORMAL);
+    cairo_select_font_face(m_cairoContext, "Sans", CAIRO_FONT_SLANT_NORMAL, CAIRO_FONT_WEIGHT_BOLD);
     cairo_set_font_size(m_cairoContext, 16);
     cairo_text_extents(m_cairoContext, string.c_str(), &extents);
+
     pop();
 
-    return {extents.width, extents.height};
+    return {extents.x_advance, extents.y_advance};
 }
 
 std::pair<float, float> mermaid::graphics::SDL2DrawContext::measureMultilineString(std::string string,
@@ -319,4 +346,16 @@ std::pair<float, float> mermaid::graphics::SDL2DrawContext::measureMultilineStri
 {
     // TODO
     return {};
+}
+
+bool mermaid::graphics::SDL2DrawContext::isDirty() const
+{
+    return m_dirty;
+}
+
+mermaid::graphics::DrawContext& mermaid::graphics::SDL2DrawContext::setDirty(bool dirty)
+{
+    m_dirty = dirty;
+
+    return *this;
 }
