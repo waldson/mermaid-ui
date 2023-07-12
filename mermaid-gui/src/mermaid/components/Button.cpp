@@ -3,6 +3,8 @@
 #include "mermaid/components/Label.h"
 #include "mermaid/components/View.h"
 
+#include <iostream>
+
 mermaid::components::Button::Button(const std::string& text, mermaid::Font& font) :
     background(mermaid::components::View::create(0, 0, 0, 0)), text(mermaid::components::Label::create(text, font)),
     currentColor(nullptr)
@@ -71,6 +73,7 @@ void mermaid::components::Button::draw(Context& ctx)
     auto textRect = text->getDrawRect();
 
     text->setPosition((bgRect.width - textRect.width) / 2, (bgRect.height - textRect.height) / 2);
+    text->setColor(textColor);
     /* text->setPosition(0, 0); */
 
     auto parentPosition = getParentPosition();

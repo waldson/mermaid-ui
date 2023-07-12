@@ -14,8 +14,8 @@ AllowAllConstructorInitializersOnNextLine: true
 AllowAllParametersOfDeclarationOnNextLine: true
 AllowShortBlocksOnASingleLine: Never
 AllowShortCaseLabelsOnASingleLine: false
-AllowShortFunctionsOnASingleLine: None
 AllowShortLambdasOnASingleLine: All
+AllowShortFunctionsOnASingleLine: None
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortLoopsOnASingleLine: false
 AlwaysBreakAfterDefinitionReturnType: None
@@ -133,4 +133,5 @@ StatementMacros:
 TabWidth:        4
 UseCRLF:         false
 UseTab:          Never
+PenaltyIndentedWhitespace: 1
 ...

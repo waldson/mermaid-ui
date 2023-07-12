@@ -2,6 +2,8 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_ttf.h>
+#include <SDL_opengl.h>
+#include <iostream>
 #include <stdexcept>
 #include <string_view>
 
@@ -24,7 +26,10 @@ std::unique_ptr<SdlWindow> mermaid::SdlContext::createWindow(std::string title, 
                                                              unsigned int options)
 {
     this->init();
-    return SdlWindow::create(title, x, y, width, height, options);
+
+    auto window = SdlWindow::create(title, x, y, width, height, options);
+
+    return std::move(window);
 }
 
 std::unique_ptr<mermaid::SdlContext> mermaid::SdlContext::create()
@@ -46,6 +51,8 @@ void mermaid::SdlContext::init()
     if (TTF_Init() != 0) {
         throw std::runtime_error("Error initializing TTF fonts.");
     }
+
+    SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");
 
     initialized = true;
 }

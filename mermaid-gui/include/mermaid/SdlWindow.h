@@ -16,10 +16,13 @@ class SdlWindow
                                                       unsigned int options);
     ~SdlWindow();
 
-    SDL_Renderer* getRenderer();
+    SdlRenderer& getRenderer();
 
     operator SDL_Window*() const;
     SDL_Window* asSdlPointer() const;
+
+    int getWidth() const;
+    int getHeight() const;
 
   private:
     SdlWindow(std::string title, int x, int y, int width, int height, unsigned int options);

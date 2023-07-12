@@ -2,22 +2,31 @@
 
 #include "mermaid/Context.h"
 #include "mermaid/Event.h"
+#include "mermaid/SdlContext.h"
 #include "mermaid/SdlWindow.h"
 
 #include <SDL2/SDL.h>
+#include <SDL_video.h>
 #include <algorithm>
 #include <chrono>
+#include <iostream>
 #include <memory>
 
-mermaid::Application::Application(mermaid::SdlWindow& window) :
-    window(window), running(false), delta(0.0f), rootComponent(nullptr)
+mermaid::Application::Application(const std::string& title, int x, int y, int width, int height) :
+    running(false), delta(0.0f), rootComponent(nullptr)
 {
+    m_sdlContext = mermaid::SdlContext::create();
+    m_window = m_sdlContext->createWindow(title, x, y, 800, 600, SDL_WINDOW_ALLOW_HIGHDPI);
+}
+
+mermaid::SdlRenderer& mermaid::Application::getRenderer()
+{
+    return m_window->getRenderer();
 }
 
 void mermaid::Application::clear()
 {
-    SDL_SetRenderDrawColor(window.getRenderer(), 0, 0, 0, 255);
-    SDL_RenderClear(window.getRenderer());
+    m_window->getRenderer().clear();
 }
 
 void mermaid::Application::update(mermaid::Context& ctx)
@@ -40,14 +49,14 @@ bool mermaid::Application::processEvents(mermaid::Context& ctx)
     bool hasRoot = hasRootComponent();
 
     while (SDL_PollEvent(&e)) {
-
-        if (!hasRootComponent()) {
-            continue;
-        }
-
         auto event = mermaid::Event::fromRaw(e);
+
         if (event.isQuitEvent()) {
             return true;
+        }
+
+        if (event.isWindowEvent()) {
+            m_window->getRenderer().onWindowResize(event);
         }
 
         if (!hasRoot) {
@@ -102,7 +111,7 @@ void mermaid::Application::handleTextInputEvent(SDL_Event& evt, mermaid::Context
 
 void mermaid::Application::handleMouseButtonDownEvents(SDL_Event& e, mermaid::Context& ctx)
 {
-    mermaid::Point location(e.button.x, e.motion.y);
+    mermaid::Point location(e.button.x, e.button.y);
     auto currentMouseDownWidgets = raycast(location);
 
     if (!latestMouseDownWidgets.contains(e.button.button)) {
@@ -129,7 +138,7 @@ void mermaid::Application::handleMouseButtonDownEvents(SDL_Event& e, mermaid::Co
 
 void mermaid::Application::handleMouseButtonUpEvents(SDL_Event& e, mermaid::Context& ctx)
 {
-    mermaid::Point location(e.button.x, e.motion.y);
+    mermaid::Point location(e.button.x, e.button.y);
     auto currentMouseUpWidgets = raycast(location);
 
     auto evt = mermaid::Event::fromRaw(e);
@@ -239,15 +248,16 @@ void mermaid::Application::handleMouseMotionEvents(SDL_Event& e, mermaid::Contex
 
 void mermaid::Application::draw(mermaid::Context& ctx)
 {
-    if (rootComponent.get() == nullptr || !rootComponent->isVisible()) {
+    if (!rootComponent || !rootComponent->isVisible()) {
         return;
     }
+
     rootComponent->draw(ctx);
 }
 
 void mermaid::Application::display()
 {
-    SDL_RenderPresent(window.getRenderer());
+    m_window->getRenderer().render();
 }
 
 void mermaid::Application::run()
@@ -268,27 +278,28 @@ void mermaid::Application::run()
     duration<float, std::milli> elapsed(end - begin);
     this->delta = 0;
 
-    bool quit = false;
+    bool shouldQuit = false;
 
     mermaid::Context ctx;
 
     ctx.application = this;
-    ctx.window = &window;
+    ctx.window = m_window.get();
     ctx.deltaTime = delta;
 
-    while (running && !quit) {
-        begin = steady_clock::now();
-
-        clear();
-        quit = processEvents(ctx);
+    begin = steady_clock::now();
+    while (running && !shouldQuit) {
+        shouldQuit = processEvents(ctx);
         update(ctx);
+        clear();
         draw(ctx);
         display();
 
         end = steady_clock::now();
         elapsed = end - begin;
-        this->delta = elapsed.count();
+        this->delta = elapsed.count() / 1000.0f;
         ctx.deltaTime = delta;
+
+        begin = steady_clock::now();
 
         if (this->delta < frame_duration) {
             SDL_Delay(frame_duration - this->delta);

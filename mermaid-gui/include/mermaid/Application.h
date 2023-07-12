@@ -1,10 +1,13 @@
 #ifndef APPLICATION_H
 #define APPLICATION_H
 #include "mermaid/Context.h"
+#include "mermaid/SdlContext.h"
+#include "mermaid/SdlRenderer.h"
 #include "mermaid/SdlWindow.h"
 #include "mermaid/components/Widget.h"
 
 #include <memory>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -13,7 +16,8 @@ namespace mermaid {
 class Application
 {
   public:
-    Application(mermaid::SdlWindow& window);
+    Application(const std::string& title, int x, int y, int width, int height);
+    SdlRenderer& getRenderer();
     void setRootComponent(std::shared_ptr<mermaid::components::Widget> root);
     std::vector<mermaid::components::Widget*> raycast(mermaid::Point& point);
     void run();
@@ -29,7 +33,8 @@ class Application
     void draw(mermaid::Context& ctx);
     void display();
 
-    mermaid::SdlWindow& window;
+    std::unique_ptr<mermaid::SdlWindow> m_window;
+    std::unique_ptr<mermaid::SdlContext> m_sdlContext;
     bool running;
     float delta;
     std::shared_ptr<mermaid::components::Widget> rootComponent;

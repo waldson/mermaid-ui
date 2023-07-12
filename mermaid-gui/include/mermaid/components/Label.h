@@ -24,6 +24,7 @@ class Label : public Widget
     void draw(Context& ctx) override;
     void update(Context& ctx) override;
     void setParent(std::shared_ptr<Widget> parent) override;
+    mermaid::Size calculateSize(const std::string& text) const;
 
     std::string getText();
     mermaid::Font& getFont();

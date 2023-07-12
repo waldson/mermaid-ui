@@ -5,12 +5,16 @@
 #include "mermaid/SdlWindow.h"
 #include "mermaid/components/Component.h"
 
+#include <SDL2_gfxPrimitives.h>
+#include <SDL_pixels.h>
+#include <SDL_render.h>
 #include <algorithm>
+#include <iostream>
 #include <memory>
 
 using namespace mermaid;
 
-mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget()
+mermaid::components::View::View(int x, int y, int width, int height) : mermaid::components::Widget(), m_borderRadius(0)
 {
     setPosition(x, y);
     setSize(width, height);
@@ -41,10 +45,20 @@ void mermaid::components::View::draw(Context& ctx)
     if (!isVisible()) {
         return;
     }
-    SDL_SetRenderDrawColor(ctx.window->getRenderer(), backgroundColor.r, backgroundColor.g, backgroundColor.b,
-                           backgroundColor.a);
-    auto rect = getDrawRect().toSdlRect();
-    SDL_RenderFillRect(ctx.window->getRenderer(), &rect);
+
+    // SDL_SetRenderTarget(renderer, texture);
+    const auto rect = getDrawRect();
+    auto& drawContext = ctx.window->getRenderer().getDrawContext();
+    drawContext.push().setRGBA255(backgroundColor.r, backgroundColor.g, backgroundColor.b, backgroundColor.a);
+
+    if (m_borderRadius > 0) {
+        drawContext.drawRoundedRectangle(rect.x, rect.y, rect.width, rect.height, m_borderRadius);
+    } else {
+        drawContext.drawRectangle(rect.x, rect.y, rect.width, rect.height);
+    }
+
+    drawContext.fill().pop();
+
     mermaid::components::Widget::draw(ctx);
 }
 
@@ -61,4 +75,9 @@ void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, st
 void mermaid::components::View::setBackground(std::uint8_t r, std::uint8_t g, std::uint8_t b)
 {
     backgroundColor = Color(r, g, b);
+}
+
+void mermaid::components::View::setBorderRadius(float borderRadius)
+{
+    m_borderRadius = borderRadius;
 }
